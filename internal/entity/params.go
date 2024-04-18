@@ -6,3 +6,7 @@ type Response struct {
 	Message string `json:"message"`
 	Errors  string `json:"errors"`
 }
+
+type Env struct {
+	AppPort int
+}

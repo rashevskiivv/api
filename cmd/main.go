@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"log"
 	"tax-api/internal"
 	"tax-api/internal/handler"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -18,9 +20,12 @@ func main() {
 	router.NoRoute(handler.NotFound)
 	router.GET("/_hc", handler.HealthCheck)
 
-	env.GetEnv()
+	envs, err := env.GetEnv()
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Running
-	err := router.Run("localhost:8080")
+	err = router.Run(fmt.Sprintf("localhost:%v", envs.AppPort))
 	if err != nil {
 		log.Fatalf("got error while running: %v", err)
 	}
