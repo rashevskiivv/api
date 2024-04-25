@@ -20,12 +20,13 @@ func main() {
 	router.NoRoute(handler.NotFound)
 	router.GET("/_hc", handler.HealthCheck)
 
-	envs, err := env.GetEnv()
+	appPort, err := env.GetAppPortEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	// Running
-	err = router.Run(fmt.Sprintf("localhost:%v", envs.AppPort))
+	err = router.Run(fmt.Sprintf("localhost:%v", appPort))
 	if err != nil {
 		log.Fatalf("got error while running: %v", err)
 	}

@@ -9,26 +9,24 @@ type User struct {
 	Password string  `json:"password"`
 }
 
-// Tax Модель налога
-type Tax struct {
+type Operation struct {
 	ID            int64   `json:"id"`
 	UserID        int64   `json:"userID"`
 	Category      string  `json:"category"`
 	AmountOfMoney float64 `json:"amountOfMoney"`
+}
+
+// Tax Модель налога
+type Tax struct {
+	Operation
 }
 
 // Income Модель дохода
 type Income struct {
-	ID            int64   `json:"id"`
-	UserID        int64   `json:"userID"`
-	Category      string  `json:"category"`
-	AmountOfMoney float64 `json:"amountOfMoney"`
+	Operation
 }
 
 // Expenses Модель траты
 type Expenses struct {
-	ID            int64   `json:"id"`
-	UserID        int64   `json:"userID"`
-	Category      string  `json:"category"`
-	AmountOfMoney float64 `json:"amountOfMoney"`
+	Operation
 }
