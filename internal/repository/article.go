@@ -4,10 +4,7 @@ import (
 	"tax-api/internal/entity"
 )
 
-// todo pgx?
-
 type ArticleRepo struct {
-	// todo store db
 }
 
 type ArticleRepository interface {

@@ -3,7 +3,6 @@ package repository
 import "tax-api/internal/entity"
 
 type WordToUnderstandRepo struct {
-	// todo store db
 }
 
 type WordToUnderstandRepository interface {
