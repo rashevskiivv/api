@@ -23,3 +23,4 @@ EXPOSE 8080
 CMD ./main
 # TODO name image
 # write docker run command with name and ports
+# todo обернуть в докер бд и создание таблиц + миграции на будущее
