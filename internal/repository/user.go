@@ -1,13 +1,20 @@
 package repository
 
-import "tax-api/internal/entity"
+import (
+	"context"
+	"fmt"
+	env "tax-api/internal"
+	"tax-api/internal/entity"
+
+	"github.com/jackc/pgx/v5"
+)
 
 type UserRepo struct {
-	// todo store db
+	Postgres
 }
 
 type UserRepository interface {
-	InsertUser(user entity.User) error
+	InsertUser(ctx context.Context, user entity.User) error
 	ReadUsers(filter entity.Filter) ([]entity.User, error)
 	UpdateUser(user entity.User, filter entity.Filter) error
 	DeleteUser(filter entity.Filter) error
@@ -18,8 +25,22 @@ type UserRepository interface {
 	DeleteOperation(filter entity.Filter) error
 }
 
-func (repo *UserRepo) InsertUser(user entity.User) error {
+func NewUserRepo(ctx context.Context) UserRepo {
+	return UserRepo{NewPG(ctx, env.GetDBUrlEnv())}
+}
 
+func (repo *UserRepo) InsertUser(ctx context.Context, user entity.User) error {
+	query := `INSERT INTO public."User" ("Name", "INN", "Email", "Password") VALUES (@name, @inn, @email, @password);`
+	args := pgx.NamedArgs{
+		"name":     user.Name,
+		"inn":      user.INN,
+		"email":    user.Email,
+		"password": user.Password,
+	}
+	_, err := repo.db.Exec(ctx, query, args)
+	if err != nil {
+		return fmt.Errorf("unable to insert row: %w", err)
+	}
 	return nil
 }
 

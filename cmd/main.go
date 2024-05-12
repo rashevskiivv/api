@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"tax-api/internal"
 	"tax-api/internal/handler"
+	"tax-api/internal/repository"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,9 +27,22 @@ func main() {
 		log.Fatal(err)
 	}
 
+	router = registerHandlers(router)
+
 	// Running
 	err = router.Run(fmt.Sprintf("localhost:%v", appPort))
 	if err != nil {
 		log.Fatalf("got error while running: %v", err)
 	}
+}
+
+func registerHandlers(router *gin.Engine) *gin.Engine {
+	ctx := context.Background()
+	userRepo := repository.NewUserRepo(ctx)
+	h := handler.NewUserHandler(userRepo)
+	router.POST("users", h.InsertUserHandle)
+	return router
+}
+
+func registerRepositories(ctx context.Context) {
 }
