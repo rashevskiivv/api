@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"tax-api/internal/entity"
 	"tax-api/internal/repository"
 
@@ -39,9 +40,38 @@ func (h UserHandler) InsertUserHandle(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 	}
 	response = entity.Response{
-		Data:    nil,
 		Message: "Created",
-		Errors:  "",
+	}
+	ctx.JSON(http.StatusCreated, response)
+}
+
+func (h UserHandler) ReadUsersHandle(ctx *gin.Context) {
+	var (
+		filter   entity.Filter
+		response entity.Response
+		err      error
+	)
+
+	queryParams := ctx.Request.URL.Query()
+	filter.Limit, err = strconv.Atoi(queryParams.Get("limit"))
+	if err != nil {
+		log.Println(err)
+	}
+	filter.Conditions = queryParams //тут и limit
+
+	//todo validate here
+	users, err := h.repo.ReadUsers(ctx, filter)
+	if err != nil {
+		log.Println(err)
+		response = entity.Response{
+			Data:    nil,
+			Message: err.Error(),
+			Errors:  err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
+	}
+	response = entity.Response{
+		Data: users,
 	}
 	ctx.JSON(http.StatusCreated, response)
 }

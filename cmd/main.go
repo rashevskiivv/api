@@ -40,9 +40,9 @@ func registerHandlers(router *gin.Engine) *gin.Engine {
 	ctx := context.Background()
 	userRepo := repository.NewUserRepo(ctx)
 	h := handler.NewUserHandler(userRepo)
-	router.POST("users", h.InsertUserHandle)
-	return router
-}
 
-func registerRepositories(ctx context.Context) {
+	router.POST("users", h.InsertUserHandle)
+	router.GET("users", h.ReadUsersHandle)
+
+	return router
 }

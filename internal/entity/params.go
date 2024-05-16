@@ -13,7 +13,6 @@ type Env struct {
 }
 
 type Filter struct {
-	IDs   []int64
-	Value string
-	Size  int64
+	Conditions map[string][]string
+	Limit      int
 }
