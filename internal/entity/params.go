@@ -13,6 +13,7 @@ type Env struct {
 }
 
 type Filter struct {
-	Conditions map[string][]string
-	Limit      int
+	Cond       []map[string]string `json:"cond"`
+	Conditions map[string][]string `json:"conditions"`
+	Limit      int                 `json:"limit"`
 }

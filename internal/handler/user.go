@@ -27,6 +27,11 @@ func (h UserHandler) InsertUserHandle(ctx *gin.Context) {
 	)
 	if err := ctx.BindJSON(&user); err != nil {
 		log.Println(err)
+		response = entity.Response{
+			Errors: err.Error(),
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
 	}
 	//todo validate here
 	err := h.repo.InsertUser(ctx, user)
@@ -38,11 +43,13 @@ func (h UserHandler) InsertUserHandle(ctx *gin.Context) {
 			Errors:  err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
+		return
 	}
 	response = entity.Response{
 		Message: "Created",
 	}
 	ctx.JSON(http.StatusCreated, response)
+	return
 }
 
 func (h UserHandler) ReadUsersHandle(ctx *gin.Context) {
@@ -52,10 +59,23 @@ func (h UserHandler) ReadUsersHandle(ctx *gin.Context) {
 		err      error
 	)
 
-	queryParams := ctx.Request.URL.Query()
+	if err := ctx.BindJSON(&filter); err != nil {
+		log.Println(err)
+		response = entity.Response{
+			Errors: err.Error(),
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+	queryParams := ctx.Request.URL.Query() //todo решить что-то, почему не тело запроса
 	filter.Limit, err = strconv.Atoi(queryParams.Get("limit"))
 	if err != nil {
 		log.Println(err)
+		response = entity.Response{
+			Errors: err.Error(),
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
 	}
 	filter.Conditions = queryParams //тут и limit
 
@@ -69,9 +89,11 @@ func (h UserHandler) ReadUsersHandle(ctx *gin.Context) {
 			Errors:  err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
+		return
 	}
 	response = entity.Response{
 		Data: users,
 	}
-	ctx.JSON(http.StatusCreated, response)
+	ctx.JSON(http.StatusOK, response)
+	return
 }

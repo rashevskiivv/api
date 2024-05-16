@@ -6,6 +6,8 @@ import (
 	env "tax-api/internal"
 	"tax-api/internal/entity"
 
+	"github.com/Masterminds/squirrel"
+
 	"github.com/jackc/pgx/v5"
 )
 
@@ -13,6 +15,7 @@ import (
 
 type UserRepo struct {
 	Postgres
+	builder squirrel.StatementBuilderType
 }
 
 type UserRepository interface {
@@ -28,7 +31,10 @@ type UserRepository interface {
 }
 
 func NewUserRepo(ctx context.Context) UserRepo {
-	return UserRepo{NewPG(ctx, env.GetDBUrlEnv())}
+	return UserRepo{
+		Postgres: NewPG(ctx, env.GetDBUrlEnv()),
+		builder:  squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar),
+	}
 }
 
 func (repo *UserRepo) InsertUser(ctx context.Context, user entity.User) error {
@@ -49,20 +55,30 @@ VALUES (@name, @inn, @email, @password);`
 
 func (repo *UserRepo) ReadUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
 	var users []entity.User
-	q := `SELECT * FROM public."User"`
-	if filter.Conditions != nil {
-		q += ` WHERE`
-		for k, v := range filter.Conditions {
-			q += fmt.Sprintf(` %s = %s AND`, k, v)
+	q := repo.builder.Select(
+		"id",
+		"name",
+		"inn",
+		"email",
+		"password",
+	).From(`public."User"`)
+
+	if len(filter.Conditions) > 0 { //todo len(nil) == ?
+		for key, values := range filter.Conditions {
+			q = q.Where(squirrel.Eq{key: values})
 		}
-		q = q[:len(q)-3]
-	}
-	q += ` LIMIT @limit;`
-	args := pgx.NamedArgs{
-		"limit": filter.Limit,
 	}
 
-	rows, err := repo.db.Query(ctx, q, args)
+	if filter.Limit != 0 {
+		q = q.Limit(uint64(filter.Limit))
+	}
+
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("unable to convert query to sql: %w", err)
+	}
+
+	rows, err := repo.db.Query(ctx, sql, args)
 	if err != nil {
 		return nil, fmt.Errorf("unable to query users: %w", err)
 	}
