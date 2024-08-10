@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  app:
+    image: ${APP_IMAGE}:${APP_IMAGE_TAG}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    expose:
+      - ${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    command: ["/go/bin/app"]
+
+  postgres_db:
+    image: ${POSTGRES_IMAGE}:${POSTGRES_IMAGE_TAG}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    # todo инициализировать бд и супер юзера
+
+  redis_db:
+    image: ${REDIS_IMAGE}:${REDIS_IMAGE_TAG}
+    restart: unless-stopped
+    env_file:
+      - ./.env
