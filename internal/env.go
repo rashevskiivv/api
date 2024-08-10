@@ -3,20 +3,21 @@ package env
 import (
 	"errors"
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 const (
-	AppPort = "APP_PORT"
-	DBUrl   = "DB_URL"
+	AppPort     = "APP_PORT"
+	PostgresUrl = "POSTGRES_URL"
 )
 
 func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("can not find .env file")
+	if err := godotenv.Load("deployment/.env"); err != nil {
+		log.Fatal("can not find .env file: ", err)
 	}
 }
 
@@ -34,9 +35,9 @@ func GetAppPortEnv() (int, error) {
 }
 
 func GetDBUrlEnv() string {
-	dbUrl := os.Getenv(DBUrl)
+	dbUrl := os.Getenv(PostgresUrl)
 	if dbUrl == "" {
-		return fmt.Sprintf("can not found: %v", DBUrl)
+		return fmt.Sprintf("can not found: %v", PostgresUrl)
 	}
 	return dbUrl
 }
