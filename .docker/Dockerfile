@@ -14,9 +14,9 @@ FROM alpine:3.20
 
 WORKDIR /tax-api
 
+COPY --from=builder /tax-api/internal/migration /migration
+
 COPY --from=builder /go/bin/app /go/bin/app
 
 CMD ./go/bin/app
-# TODO name image
-# write docker run command with name and ports
-# todo обернуть в докер бд и создание таблиц + миграции на будущее
+# todo use env variables
