@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log"
 	env "tax-api/internal"
 	"tax-api/internal/entity"
 
@@ -31,8 +32,12 @@ type UserRepository interface {
 }
 
 func NewUserRepo(ctx context.Context) UserRepo {
+	url, err := env.GetDBUrlEnv()
+	if err != nil {
+		log.Fatal(err)
+	}
 	return UserRepo{
-		Postgres: NewPG(ctx, env.GetDBUrlEnv()),
+		Postgres: NewPG(ctx, url),
 		builder:  squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar),
 	}
 }

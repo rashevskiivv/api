@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"strconv"
 	"tax-api/internal"
 	"tax-api/internal/handler"
 	"tax-api/internal/repository"
@@ -18,10 +18,6 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	// Routing
-	router.NoRoute(handler.NotFound)
-	router.GET("/_hc", handler.HealthCheck)
-
 	appPort, err := env.GetAppPortEnv()
 	if err != nil {
 		log.Fatal(err)
@@ -30,7 +26,7 @@ func main() {
 	router = registerHandlers(router)
 
 	// Running
-	err = router.Run(fmt.Sprintf("localhost:%v", appPort))
+	err = router.Run(":" + strconv.Itoa(appPort))
 	if err != nil {
 		log.Fatalf("got error while running: %v", err)
 	}
@@ -41,6 +37,9 @@ func registerHandlers(router *gin.Engine) *gin.Engine {
 	userRepo := repository.NewUserRepo(ctx)
 	h := handler.NewUserHandler(userRepo)
 
+	// Routing
+	router.NoRoute(handler.NotFound)
+	router.GET("/_hc", handler.HealthCheck)
 	router.POST("users", h.InsertUserHandle)
 	router.GET("users", h.ReadUsersHandle)
 
