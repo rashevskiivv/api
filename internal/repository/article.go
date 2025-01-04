@@ -11,24 +11,24 @@ type ArticleRepo struct {
 }
 
 type ArticleRepository interface {
-	InsertArticle(article entity.Article) error
-	ReadArticles(filter entity.Filter) ([]entity.Article, error)
-	UpdateArticle(article entity.Article, filter entity.Filter) error
+	InsertArticle(article entity.Test) error
+	ReadArticles(filter entity.Filter) ([]entity.Test, error)
+	UpdateArticle(article entity.Test, filter entity.Filter) error
 	DeleteArticle(filter entity.Filter) error
 }
 
-func (repo *ArticleRepo) InsertArticle(article entity.Article) error {
+func (repo *ArticleRepo) InsertArticle(article entity.Test) error {
 
 	return nil
 }
 
-func (repo *ArticleRepo) ReadArticles(filter entity.Filter) ([]entity.Article, error) {
-	var articles []entity.Article
+func (repo *ArticleRepo) ReadArticles(filter entity.Filter) ([]entity.Test, error) {
+	var articles []entity.Test
 
 	return articles, nil
 }
 
-func (repo *ArticleRepo) UpdateArticle(article entity.Article, filter entity.Filter) error {
+func (repo *ArticleRepo) UpdateArticle(article entity.Test, filter entity.Filter) error {
 
 	return nil
 }

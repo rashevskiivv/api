@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"tax-api/internal/entity"
+
+	"github.com/gin-gonic/gin"
 )
 
-// NotFound Обработчик не найденной страницы
+// NotFound Not found page handler.
 func NotFound(c *gin.Context) {
 	b := entity.Response{
 		Data:    nil,
@@ -16,7 +17,7 @@ func NotFound(c *gin.Context) {
 	c.JSON(http.StatusNotFound, b)
 }
 
-// HealthCheck Обработчик хелсчека
+// HealthCheck Healthcheck page handler.
 func HealthCheck(c *gin.Context) {
 	b := entity.Response{
 		Data:    nil,

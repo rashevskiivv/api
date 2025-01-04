@@ -31,3 +31,35 @@ func main() {
 		log.Fatalf("got error while running: %v", err)
 	}
 }
+
+func registerHandlers(router *gin.Engine, pg *repository.Postgres) *gin.Engine {
+	// Repo
+	userRepo := repositoryUser.NewUserRepo(*pg)
+	// UseCase
+	userUC := usecaseUser.NewUserUseCase(userRepo)
+	// Handler
+	userHandler := handlerUser.NewUserHandler(userUC)
+
+	// Routing
+	router.NoRoute(handler.NotFound)
+	router.GET("/_hc", handler.HealthCheck)
+	// User
+	router.POST("users", userHandler.UpsertUserHandle)
+	router.GET("users", userHandler.ReadUsersHandle)
+	router.DELETE("users", userHandler.DeleteUsersHandle)
+
+	return router
+}
+
+func getPGInstance() (*repository.Postgres, error) {
+	url, err := env.GetDBUrlEnv()
+	if err != nil {
+		return nil, err
+	}
+	ctx := context.Background()
+	pg, err := repository.NewPG(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	return pg, nil
+}
