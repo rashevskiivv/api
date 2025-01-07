@@ -6,14 +6,3 @@ type Response struct {
 	Message string `json:"message"`
 	Errors  string `json:"errors"`
 }
-
-type Env struct {
-	AppPort int
-	DBUrl   string
-}
-
-type Filter struct {
-	IDs   []int64
-	Value string
-	Size  int64
-}

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"tax-api/internal"
 	"tax-api/internal/handler"
+	"tax-api/internal/repository"
+	repositoryQuestion "tax-api/internal/repository/question"
+	repositoryTest "tax-api/internal/repository/test"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,21 +36,25 @@ func main() {
 	}
 }
 
-func registerHandlers(router *gin.Engine, pg *repository.Postgres) *gin.Engine {
+func createHandlers(pg *repository.Postgres) {
 	// Repo
-	userRepo := repositoryUser.NewUserRepo(*pg)
-	// UseCase
-	userUC := usecaseUser.NewUserUseCase(userRepo)
-	// Handler
-	userHandler := handlerUser.NewUserHandler(userUC)
+	testRepo := repositoryTest.NewRepo(*pg)
+	questionRepo := repositoryQuestion.NewRepo(*pg)
 
+	// UseCase
+
+	// Handler
+	//
+
+	log.Println("handlers created")
+
+	return
+}
+
+func registerHandlers(router *gin.Engine) *gin.Engine {
 	// Routing
 	router.NoRoute(handler.NotFound)
 	router.GET("/_hc", handler.HealthCheck)
-	// User
-	router.POST("users", userHandler.UpsertUserHandle)
-	router.GET("users", userHandler.ReadUsersHandle)
-	router.DELETE("users", userHandler.DeleteUsersHandle)
 
 	return router
 }
