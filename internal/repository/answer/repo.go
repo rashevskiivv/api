@@ -1,4 +1,4 @@
-package question
+package answer
 
 import (
 	"context"
@@ -22,16 +22,17 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) UpsertQuestion(ctx context.Context, input entity.Question) (*entity.Question, error) {
+func (r *Repo) UpsertAnswer(ctx context.Context, input entity.Answer) (*entity.Answer, error) {
 	var id int64
 
-	const q = `INSERT INTO @table ("question", "id_test")
-VALUES (@question, @id_test)
+	const q = `INSERT INTO @table ("answer", "id_question", "is_right")
+VALUES (@answer, @id_question, @is_right)
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":    entity.TableNameQuestion,
-		"question": input.Question,
-		"id_test":  input.IDTest,
+		"table":       entity.TableNameAnswer,
+		"answer":      input.Answer,
+		"id_question": input.IDQuestion,
+		"is_right":    input.IsRight,
 	}
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
@@ -39,27 +40,31 @@ RETURNING id;`
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
 
-	return &entity.Question{ID: &id}, nil
+	return &entity.Answer{ID: &id}, nil
 }
 
-func (r *Repo) ReadQuestions(ctx context.Context, filter entity.QuestionFilter) ([]entity.Question, error) {
-	var output []entity.Question
+func (r *Repo) ReadAnswers(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error) {
+	var output []entity.Answer
 
 	q := r.builder.Select(
 		"id",
-		"question",
-		"id_test",
-	).From(entity.TableNameQuestion)
+		"answer",
+		"id_question",
+		"is_right",
+	).From(entity.TableNameAnswer)
 
 	// Where
 	if len(filter.ID) > 0 {
 		q = q.Where(squirrel.Eq{"id": filter.ID})
 	}
-	if len(filter.Question) > 0 {
-		q = q.Where(squirrel.Eq{"question": filter.Question})
+	if len(filter.Answer) > 0 {
+		q = q.Where(squirrel.Eq{"answer": filter.Answer})
 	}
-	if len(filter.IDTest) > 0 {
-		q = q.Where(squirrel.Eq{"id_test": filter.IDTest})
+	if len(filter.IDQuestion) > 0 {
+		q = q.Where(squirrel.Eq{"id_question": filter.IDQuestion})
+	}
+	if len(filter.IsRight) > 0 {
+		q = q.Where(squirrel.Eq{"is_right": filter.IsRight})
 	}
 
 	// Limit
@@ -75,20 +80,21 @@ func (r *Repo) ReadQuestions(ctx context.Context, filter entity.QuestionFilter) 
 	rows, err := r.DB.Query(ctx, sql, args...)
 	defer rows.Close()
 	if err != nil {
-		return nil, fmt.Errorf("unable to query questions: %v", err)
+		return nil, fmt.Errorf("unable to query answers: %v", err)
 	}
 
 	for rows.Next() {
-		question := entity.Question{}
+		answer := entity.Answer{}
 		err = rows.Scan(
-			&question.ID,
-			&question.Question,
-			&question.IDTest,
+			&answer.ID,
+			&answer.Answer,
+			&answer.IDQuestion,
+			&answer.IsRight,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("unable to scan row: %v", err)
 		}
-		output = append(output, question)
+		output = append(output, answer)
 	}
 	if rows.Err() != nil {
 		return nil, rows.Err()
@@ -97,18 +103,21 @@ func (r *Repo) ReadQuestions(ctx context.Context, filter entity.QuestionFilter) 
 	return output, nil
 }
 
-func (r *Repo) DeleteQuestion(ctx context.Context, filter entity.QuestionFilter) error {
-	q := r.builder.Delete(entity.TableNameQuestion)
+func (r *Repo) DeleteAnswer(ctx context.Context, filter entity.AnswerFilter) error {
+	q := r.builder.Delete(entity.TableNameAnswer)
 
 	// Where
 	if len(filter.ID) > 0 {
 		q = q.Where(squirrel.Eq{"id": filter.ID})
 	}
-	if len(filter.Question) > 0 {
-		q = q.Where(squirrel.Eq{"question": filter.Question})
+	if len(filter.Answer) > 0 {
+		q = q.Where(squirrel.Eq{"answer": filter.Answer})
 	}
-	if len(filter.IDTest) > 0 {
-		q = q.Where(squirrel.Eq{"id_test": filter.IDTest})
+	if len(filter.IDQuestion) > 0 {
+		q = q.Where(squirrel.Eq{"id_question": filter.IDQuestion})
+	}
+	if len(filter.IsRight) > 0 {
+		q = q.Where(squirrel.Eq{"is_right": filter.IsRight})
 	}
 
 	// Limit
@@ -123,7 +132,7 @@ func (r *Repo) DeleteQuestion(ctx context.Context, filter entity.QuestionFilter)
 
 	_, err = r.DB.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("unable to delete questions: %v", err)
+		return fmt.Errorf("unable to delete answers: %v", err)
 	}
 
 	return nil

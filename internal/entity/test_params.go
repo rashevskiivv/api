@@ -2,28 +2,23 @@ package entity
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
 type TestFilter struct {
-	ID                 []string `json:"id,omitempty"`
+	ID                 []int64  `json:"id,omitempty"`
 	Title              []string `json:"title,omitempty"`
 	Description        []string `json:"description,omitempty"`
 	AveragePassingTime []string `json:"average_passing_time,omitempty"`
-	IDSkill            []string `json:"id_skill,omitempty"`
+	IDSkill            []int64  `json:"id_skill,omitempty"`
 	Limit              int32    `json:"limit,omitempty"`
 }
 
 func (f *TestFilter) Validate() error {
 	if len(f.ID) > 0 {
-		for i, s := range f.ID {
-			if len(s) == 0 {
-				return fmt.Errorf("%v. id can not be empty", i)
-			}
-			_, err := strconv.Atoi(s)
-			if err != nil {
-				return fmt.Errorf("%v. id is not integer", i)
+		for i, v := range f.ID {
+			if v == 0 {
+				return fmt.Errorf("%v. id can not be zero", i)
 			}
 		}
 	}
@@ -71,13 +66,9 @@ func (f *TestFilter) Validate() error {
 	}
 
 	if len(f.IDSkill) > 0 {
-		for i, s := range f.IDSkill {
-			if len(s) == 0 {
-				return fmt.Errorf("%v. id_skill can not be empty", i)
-			}
-			_, err := strconv.Atoi(s)
-			if err != nil {
-				return fmt.Errorf("%v. id_skill is not integer", i)
+		for i, v := range f.IDSkill {
+			if v == 0 {
+				return fmt.Errorf("%v. id_skill can not be zero", i)
 			}
 		}
 	}

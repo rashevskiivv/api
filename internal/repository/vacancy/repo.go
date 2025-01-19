@@ -1,4 +1,4 @@
-package test
+package vacancy
 
 import (
 	"context"
@@ -22,18 +22,18 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) UpsertTest(ctx context.Context, input entity.Test) (*entity.Test, error) {
+func (r *Repo) UpsertVacancy(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
 	var id int64
 
-	const q = `INSERT INTO @table ("title", "description", "average_passing_time", "id_skill")
-VALUES (@title, @description, @average_passing_time, @id_skill)
+	const q = `INSERT INTO @table ("title", "grade", "date", "description")
+VALUES (@title, @grade, @date, @description)
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":                entity.TableNameTest,
-		"title":                input.Title,
-		"description":          input.Description,
-		"average_passing_time": input.AveragePassingTime,
-		"id_skill":             input.IDSkill,
+		"table":       entity.TableNameVacancy,
+		"title":       input.Title,
+		"grade":       input.Grade,
+		"date":        input.Date,
+		"description": input.Description,
 	}
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
@@ -41,19 +41,19 @@ RETURNING id;`
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
 
-	return &entity.Test{ID: &id}, nil
+	return &entity.Vacancy{ID: &id}, nil
 }
 
-func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entity.Test, error) {
-	var output []entity.Test
+func (r *Repo) ReadVacancies(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error) {
+	var output []entity.Vacancy
 
 	q := r.builder.Select(
 		"id",
 		"title",
+		"grade",
+		"date",
 		"description",
-		"average_passing_time",
-		"id_skill",
-	).From(entity.TableNameTest)
+	).From(entity.TableNameVacancy)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -62,14 +62,14 @@ func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entit
 	if len(filter.Title) > 0 {
 		q = q.Where(squirrel.Eq{"title": filter.Title})
 	}
+	if len(filter.Grade) > 0 {
+		q = q.Where(squirrel.Eq{"grade": filter.Grade})
+	}
+	if len(filter.Date) > 0 {
+		q = q.Where(squirrel.Eq{"date": filter.Date})
+	}
 	if len(filter.Description) > 0 {
 		q = q.Where(squirrel.Eq{"description": filter.Description})
-	}
-	if len(filter.AveragePassingTime) > 0 {
-		q = q.Where(squirrel.Eq{"average_passing_time": filter.AveragePassingTime})
-	}
-	if len(filter.IDSkill) > 0 {
-		q = q.Where(squirrel.Eq{"id_skill": filter.IDSkill})
 	}
 
 	// Limit
@@ -85,22 +85,22 @@ func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entit
 	rows, err := r.DB.Query(ctx, sql, args...)
 	defer rows.Close()
 	if err != nil {
-		return nil, fmt.Errorf("unable to query tests: %v", err)
+		return nil, fmt.Errorf("unable to query vacancies: %v", err)
 	}
 
 	for rows.Next() {
-		test := entity.Test{}
+		vacancy := entity.Vacancy{}
 		err = rows.Scan(
-			&test.ID,
-			&test.Title,
-			&test.Description,
-			&test.AveragePassingTime,
-			&test.IDSkill,
+			&vacancy.ID,
+			&vacancy.Title,
+			&vacancy.Grade,
+			&vacancy.Date,
+			&vacancy.Description,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("unable to scan row: %v", err)
 		}
-		output = append(output, test)
+		output = append(output, vacancy)
 	}
 	if rows.Err() != nil {
 		return nil, rows.Err()
@@ -109,8 +109,8 @@ func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entit
 	return output, nil
 }
 
-func (r *Repo) DeleteTest(ctx context.Context, filter entity.TestFilter) error {
-	q := r.builder.Delete(entity.TableNameTest)
+func (r *Repo) DeleteVacancy(ctx context.Context, filter entity.VacancyFilter) error {
+	q := r.builder.Delete(entity.TableNameVacancy)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -119,14 +119,14 @@ func (r *Repo) DeleteTest(ctx context.Context, filter entity.TestFilter) error {
 	if len(filter.Title) > 0 {
 		q = q.Where(squirrel.Eq{"title": filter.Title})
 	}
+	if len(filter.Grade) > 0 {
+		q = q.Where(squirrel.Eq{"grade": filter.Grade})
+	}
+	if len(filter.Date) > 0 {
+		q = q.Where(squirrel.Eq{"date": filter.Date})
+	}
 	if len(filter.Description) > 0 {
 		q = q.Where(squirrel.Eq{"description": filter.Description})
-	}
-	if len(filter.AveragePassingTime) > 0 {
-		q = q.Where(squirrel.Eq{"average_passing_time": filter.AveragePassingTime})
-	}
-	if len(filter.IDSkill) > 0 {
-		q = q.Where(squirrel.Eq{"id_skill": filter.IDSkill})
 	}
 
 	// Limit
@@ -141,7 +141,7 @@ func (r *Repo) DeleteTest(ctx context.Context, filter entity.TestFilter) error {
 
 	_, err = r.DB.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("unable to delete tests: %v", err)
+		return fmt.Errorf("unable to delete vacancies: %v", err)
 	}
 
 	return nil

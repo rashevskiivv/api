@@ -4,11 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+
 	"tax-api/internal"
 	"tax-api/internal/handler"
 	"tax-api/internal/repository"
+	repositoryAnswer "tax-api/internal/repository/answer"
 	repositoryQuestion "tax-api/internal/repository/question"
 	repositoryTest "tax-api/internal/repository/test"
+	repositoryVacancy "tax-api/internal/repository/vacancy"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,8 +41,10 @@ func main() {
 
 func createHandlers(pg *repository.Postgres) {
 	// Repo
-	testRepo := repositoryTest.NewRepo(*pg)
-	questionRepo := repositoryQuestion.NewRepo(*pg)
+	testRepo := repositoryTest.NewRepo(pg)
+	questionRepo := repositoryQuestion.NewRepo(pg)
+	answerRepo := repositoryAnswer.NewRepo(pg)
+	vacancyRepo := repositoryVacancy.NewRepo(pg)
 
 	// UseCase
 

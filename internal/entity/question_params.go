@@ -2,26 +2,21 @@ package entity
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
 type QuestionFilter struct {
-	ID       []string `json:"id,omitempty"`
+	ID       []int64  `json:"id,omitempty"`
 	Question []string `json:"question,omitempty"`
-	IDTest   []string `json:"id_test,omitempty"`
+	IDTest   []int64  `json:"id_test,omitempty"`
 	Limit    int32    `json:"limit,omitempty"`
 }
 
 func (f *QuestionFilter) Validate() error {
 	if len(f.ID) > 0 {
-		for i, s := range f.ID {
-			if len(s) == 0 {
-				return fmt.Errorf("%v. id can not be empty", i)
-			}
-			_, err := strconv.Atoi(s)
-			if err != nil {
-				return fmt.Errorf("%v. id is not integer", i)
+		for i, v := range f.ID {
+			if v == 0 {
+				return fmt.Errorf("%v. id can not be zero", i)
 			}
 		}
 	}
@@ -41,13 +36,9 @@ func (f *QuestionFilter) Validate() error {
 	}
 
 	if len(f.IDTest) > 0 {
-		for i, s := range f.IDTest {
-			if len(s) == 0 {
-				return fmt.Errorf("%v. id_test can not be empty", i)
-			}
-			_, err := strconv.Atoi(s)
-			if err != nil {
-				return fmt.Errorf("%v. id_test is not integer", i)
+		for i, v := range f.IDTest {
+			if v == 0 {
+				return fmt.Errorf("%v. id_test can not be zero", i)
 			}
 		}
 	}
