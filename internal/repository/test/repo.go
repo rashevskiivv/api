@@ -22,7 +22,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) UpsertTest(ctx context.Context, input entity.Test) (*entity.Test, error) {
+func (r *Repo) Upsert(ctx context.Context, input entity.Test) (*entity.Test, error) {
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "description", "average_passing_time", "id_skill")
@@ -44,7 +44,7 @@ RETURNING id;`
 	return &entity.Test{ID: &id}, nil
 }
 
-func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entity.Test, error) {
+func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Test, error) {
 	var output []entity.Test
 
 	q := r.builder.Select(
@@ -109,7 +109,7 @@ func (r *Repo) ReadTests(ctx context.Context, filter entity.TestFilter) ([]entit
 	return output, nil
 }
 
-func (r *Repo) DeleteTest(ctx context.Context, filter entity.TestFilter) error {
+func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 	q := r.builder.Delete(entity.TableNameTest)
 
 	// Where
@@ -145,4 +145,14 @@ func (r *Repo) DeleteTest(ctx context.Context, filter entity.TestFilter) error {
 	}
 
 	return nil
+}
+
+func (r *Repo) Start(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
+	// todo
+	panic("implement me")
+}
+
+func (r *Repo) End(ctx context.Context, filter entity.EndTestInput) (*entity.EndTestOutput, error) {
+	// todo
+	panic("implement me")
 }

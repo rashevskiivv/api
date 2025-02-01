@@ -6,7 +6,7 @@ import (
 )
 
 type Repository interface {
-	UpsertAnswer(ctx context.Context, input entity.Answer) (*entity.Answer, error)
-	ReadAnswers(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error)
-	DeleteAnswer(ctx context.Context, filter entity.AnswerFilter) error
+	Upsert(ctx context.Context, input entity.Answer) (*entity.Answer, error)
+	Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error)
+	Delete(ctx context.Context, filter entity.AnswerFilter) error
 }

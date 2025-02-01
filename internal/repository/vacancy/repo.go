@@ -22,7 +22,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) UpsertVacancy(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
+func (r *Repo) Upsert(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "grade", "date", "description")
@@ -44,7 +44,7 @@ RETURNING id;`
 	return &entity.Vacancy{ID: &id}, nil
 }
 
-func (r *Repo) ReadVacancies(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error) {
+func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error) {
 	var output []entity.Vacancy
 
 	q := r.builder.Select(
@@ -109,7 +109,7 @@ func (r *Repo) ReadVacancies(ctx context.Context, filter entity.VacancyFilter) (
 	return output, nil
 }
 
-func (r *Repo) DeleteVacancy(ctx context.Context, filter entity.VacancyFilter) error {
+func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
 	q := r.builder.Delete(entity.TableNameVacancy)
 
 	// Where

@@ -79,3 +79,23 @@ func (f *TestFilter) Validate() error {
 
 	return nil
 }
+
+type StartTestInput struct {
+	IDTest int64 `json:"id_test"`
+	IDUser int64 `json:"id_user"`
+}
+
+type StartTestOutput struct {
+	NumberOfQuestions int8  `json:"number_of_questions"`
+	IDFirstQuestion   int64 `json:"id_first_question"`
+}
+
+type EndTestInput struct {
+	IDTest int64 `json:"id_test"`
+	IDUser int64 `json:"id_user"`
+}
+
+type EndTestOutput struct {
+	Score             int8 `json:"score"`
+	NumberOfQuestions int8 `json:"number_of_questions"`
+}

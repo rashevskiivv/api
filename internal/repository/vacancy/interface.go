@@ -6,7 +6,7 @@ import (
 )
 
 type Repository interface {
-	UpsertVacancy(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error)
-	ReadVacancies(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error)
-	DeleteVacancy(ctx context.Context, filter entity.VacancyFilter) error
+	Upsert(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error)
+	Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error)
+	Delete(ctx context.Context, filter entity.VacancyFilter) error
 }

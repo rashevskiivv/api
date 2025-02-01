@@ -22,7 +22,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) UpsertAnswer(ctx context.Context, input entity.Answer) (*entity.Answer, error) {
+func (r *Repo) Upsert(ctx context.Context, input entity.Answer) (*entity.Answer, error) {
 	var id int64
 
 	const q = `INSERT INTO @table ("answer", "id_question", "is_right")
@@ -43,7 +43,7 @@ RETURNING id;`
 	return &entity.Answer{ID: &id}, nil
 }
 
-func (r *Repo) ReadAnswers(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error) {
+func (r *Repo) Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error) {
 	var output []entity.Answer
 
 	q := r.builder.Select(
@@ -103,7 +103,7 @@ func (r *Repo) ReadAnswers(ctx context.Context, filter entity.AnswerFilter) ([]e
 	return output, nil
 }
 
-func (r *Repo) DeleteAnswer(ctx context.Context, filter entity.AnswerFilter) error {
+func (r *Repo) Delete(ctx context.Context, filter entity.AnswerFilter) error {
 	q := r.builder.Delete(entity.TableNameAnswer)
 
 	// Where
