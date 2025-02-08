@@ -10,6 +10,7 @@ import (
 	"tax-api/internal/repository"
 	repositoryAnswer "tax-api/internal/repository/answer"
 	repositoryQuestion "tax-api/internal/repository/question"
+	repositorySkill "tax-api/internal/repository/skill"
 	repositoryTest "tax-api/internal/repository/test"
 	repositoryVacancy "tax-api/internal/repository/vacancy"
 
@@ -45,6 +46,7 @@ func createHandlers(pg *repository.Postgres) {
 	questionRepo := repositoryQuestion.NewRepo(pg)
 	answerRepo := repositoryAnswer.NewRepo(pg)
 	vacancyRepo := repositoryVacancy.NewRepo(pg)
+	skillRepo := repositorySkill.NewRepo(pg)
 
 	// UseCase
 

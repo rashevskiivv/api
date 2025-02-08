@@ -32,6 +32,7 @@ func NewPG(ctx context.Context, connString string) (*Postgres, error) {
 		log.Panicf("unable to ping db: %s", err)
 		return nil, err
 	}
+	log.Println("pg instance created")
 	return &pgInstance, nil
 }
 

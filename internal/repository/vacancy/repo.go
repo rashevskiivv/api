@@ -3,6 +3,7 @@ package vacancy
 import (
 	"context"
 	"fmt"
+	"log"
 	"tax-api/internal/entity"
 	"tax-api/internal/repository"
 
@@ -23,6 +24,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 }
 
 func (r *Repo) Upsert(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
+	log.Println("vacancy upsert started")
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "grade", "date", "description")
@@ -38,13 +40,16 @@ RETURNING id;`
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
 	if err != nil {
+		log.Printf("unable to insert or update row: %v\n", err)
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
+	log.Println("vacancy upsert done")
 
 	return &entity.Vacancy{ID: &id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error) {
+	log.Println("vacancy read started")
 	var output []entity.Vacancy
 
 	q := r.builder.Select(
@@ -79,12 +84,14 @@ func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.
 
 	sql, args, err := q.ToSql()
 	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
 		return nil, fmt.Errorf("unable to convert query to sql: %v", err)
 	}
 
 	rows, err := r.DB.Query(ctx, sql, args...)
 	defer rows.Close()
 	if err != nil {
+		log.Printf("unable to query vacancies: %v\n", err)
 		return nil, fmt.Errorf("unable to query vacancies: %v", err)
 	}
 
@@ -98,18 +105,22 @@ func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.
 			&vacancy.Description,
 		)
 		if err != nil {
+			log.Printf("unable to scan row: %v\n", err)
 			return nil, fmt.Errorf("unable to scan row: %v", err)
 		}
 		output = append(output, vacancy)
 	}
 	if rows.Err() != nil {
+		log.Println(rows.Err())
 		return nil, rows.Err()
 	}
+	log.Println("vacancy read done")
 
 	return output, nil
 }
 
 func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
+	log.Println("vacancy delete started")
 	q := r.builder.Delete(entity.TableNameVacancy)
 
 	// Where
@@ -136,13 +147,16 @@ func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
 
 	sql, args, err := q.ToSql()
 	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
 		return fmt.Errorf("unable to convert query to sql: %v", err)
 	}
 
 	_, err = r.DB.Exec(ctx, sql, args...)
 	if err != nil {
+		log.Printf("unable to delete vacancies: %v\n", err)
 		return fmt.Errorf("unable to delete vacancies: %v", err)
 	}
+	log.Println("vacancy delete done")
 
 	return nil
 }

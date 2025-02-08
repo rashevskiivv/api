@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"log"
 	"tax-api/internal/entity"
 	"tax-api/internal/repository"
 
@@ -23,6 +24,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 }
 
 func (r *Repo) Upsert(ctx context.Context, input entity.Test) (*entity.Test, error) {
+	log.Println("test upsert started")
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "description", "average_passing_time", "id_skill")
@@ -38,13 +40,16 @@ RETURNING id;`
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
 	if err != nil {
+		log.Printf("unable to insert or update row: %v\n", err)
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
+	log.Println("test upsert done")
 
 	return &entity.Test{ID: &id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Test, error) {
+	log.Println("test read started")
 	var output []entity.Test
 
 	q := r.builder.Select(
@@ -79,12 +84,14 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 
 	sql, args, err := q.ToSql()
 	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
 		return nil, fmt.Errorf("unable to convert query to sql: %v", err)
 	}
 
 	rows, err := r.DB.Query(ctx, sql, args...)
 	defer rows.Close()
 	if err != nil {
+		log.Printf("unable to query tests: %v\n", err)
 		return nil, fmt.Errorf("unable to query tests: %v", err)
 	}
 
@@ -98,18 +105,22 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 			&test.IDSkill,
 		)
 		if err != nil {
+			log.Printf("unable to scan row: %v\n", err)
 			return nil, fmt.Errorf("unable to scan row: %v", err)
 		}
 		output = append(output, test)
 	}
 	if rows.Err() != nil {
+		log.Println(rows.Err())
 		return nil, rows.Err()
 	}
+	log.Println("test read done")
 
 	return output, nil
 }
 
 func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
+	log.Println("test delete started")
 	q := r.builder.Delete(entity.TableNameTest)
 
 	// Where
@@ -136,13 +147,16 @@ func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 
 	sql, args, err := q.ToSql()
 	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
 		return fmt.Errorf("unable to convert query to sql: %v", err)
 	}
 
 	_, err = r.DB.Exec(ctx, sql, args...)
 	if err != nil {
+		log.Printf("unable to delete tests: %v\n", err)
 		return fmt.Errorf("unable to delete tests: %v", err)
 	}
+	log.Println("test delete done")
 
 	return nil
 }
