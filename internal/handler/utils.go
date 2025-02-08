@@ -7,6 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	AnswersPath   = "/answers"
+	QuestionsPath = "/questions"
+	SkillPath     = "/skills"
+	TestsPath     = "/tests"
+	UsersPath     = "/users"
+	VacancyPath   = "/vacancies"
+)
+
 // NotFound Not found page handler.
 func NotFound(c *gin.Context) {
 	b := entity.Response{
