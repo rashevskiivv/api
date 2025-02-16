@@ -10,10 +10,10 @@ import (
 const (
 	AnswersPath   = "/answers"
 	QuestionsPath = "/questions"
-	SkillPath     = "/skills"
+	SkillsPath    = "/skills"
 	TestsPath     = "/tests"
 	UsersPath     = "/users"
-	VacancyPath   = "/vacancies"
+	VacanciesPath = "/vacancies"
 )
 
 // NotFound Not found page handler.

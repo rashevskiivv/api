@@ -11,7 +11,7 @@ type TestFilter struct {
 	Description        []string `json:"description,omitempty"`
 	AveragePassingTime []string `json:"average_passing_time,omitempty"`
 	IDSkill            []int64  `json:"id_skill,omitempty"`
-	Limit              int32    `json:"limit,omitempty"`
+	Limit              uint     `json:"limit,omitempty"`
 }
 
 func (f *TestFilter) Validate() error {

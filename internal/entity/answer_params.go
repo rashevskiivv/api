@@ -10,7 +10,7 @@ type AnswerFilter struct {
 	Answer     []string `json:"answer,omitempty"`
 	IDQuestion []int64  `json:"id_question,omitempty"`
 	IsRight    []bool   `json:"is_right,omitempty"`
-	Limit      int32    `json:"limit,omitempty"`
+	Limit      uint     `json:"limit,omitempty"`
 }
 
 func (f *AnswerFilter) Validate() error {

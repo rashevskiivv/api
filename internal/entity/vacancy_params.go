@@ -12,7 +12,7 @@ type VacancyFilter struct {
 	Grade       []string    `json:"grade,omitempty"`
 	Date        []time.Time `json:"date,omitempty"`
 	Description []string    `json:"description,omitempty"`
-	Limit       int32       `json:"limit,omitempty"`
+	Limit       uint        `json:"limit,omitempty"`
 }
 
 func (f *VacancyFilter) Validate() error {

@@ -9,7 +9,7 @@ type QuestionFilter struct {
 	ID       []int64  `json:"id,omitempty"`
 	Question []string `json:"question,omitempty"`
 	IDTest   []int64  `json:"id_test,omitempty"`
-	Limit    int32    `json:"limit,omitempty"`
+	Limit    uint     `json:"limit,omitempty"`
 }
 
 func (f *QuestionFilter) Validate() error {

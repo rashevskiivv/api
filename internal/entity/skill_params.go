@@ -8,7 +8,7 @@ import (
 type SkillFilter struct {
 	ID    []int64  `json:"id,omitempty"`
 	Title []string `json:"title,omitempty"`
-	Limit int32    `json:"limit,omitempty"`
+	Limit uint     `json:"limit,omitempty"`
 }
 
 func (f *SkillFilter) Validate() error {

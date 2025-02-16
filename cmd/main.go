@@ -4,20 +4,27 @@ import (
 	"context"
 	"fmt"
 	"log"
+	repositoryUser "tax-api/internal/repository/user"
+	usecaseUser "tax-api/internal/usecase/user"
 
 	"tax-api/internal"
 	"tax-api/internal/handler"
+
 	handlerAnswer "tax-api/internal/handler/answer"
 	handlerQuestion "tax-api/internal/handler/question"
 	handlerSkill "tax-api/internal/handler/skill"
 	handlerTest "tax-api/internal/handler/test"
+	handlerUser "tax-api/internal/handler/user"
 	handlerVacancy "tax-api/internal/handler/vacancy"
+
 	"tax-api/internal/repository"
+
 	repositoryAnswer "tax-api/internal/repository/answer"
 	repositoryQuestion "tax-api/internal/repository/question"
 	repositorySkill "tax-api/internal/repository/skill"
 	repositoryTest "tax-api/internal/repository/test"
 	repositoryVacancy "tax-api/internal/repository/vacancy"
+
 	usecaseAnswer "tax-api/internal/usecase/answer"
 	usecaseQuestion "tax-api/internal/usecase/question"
 	usecaseSkill "tax-api/internal/usecase/skill"
@@ -61,29 +68,29 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 	questionRepo := repositoryQuestion.NewRepo(pg)
 	skillRepo := repositorySkill.NewRepo(pg)
 	testRepo := repositoryTest.NewRepo(pg)
-	userRepo := repositorySkill.NewRepo(pg)
+	userRepo := repositoryUser.NewRepo(pg)
 	vacancyRepo := repositoryVacancy.NewRepo(pg)
+	log.Println("repositories created")
 
 	// UseCase
 	answerUC := usecaseAnswer.NewUseCase(answerRepo)
 	questionUC := usecaseQuestion.NewUseCase(questionRepo)
 	skillUC := usecaseSkill.NewUseCase(skillRepo)
 	testUC := usecaseTest.NewUseCase(testRepo)
-	userUC := usecaseSkill.NewUseCase(skillRepo)
+	userUC := usecaseUser.NewUseCase(userRepo)
 	vacancyUC := usecaseVacancy.NewUseCase(vacancyRepo)
+	log.Println("use cases created")
 
 	// Handler
 	answerHandler := handlerAnswer.NewHandler(answerUC)
 	questionHandler := handlerQuestion.NewHandler(questionUC)
 	skillHandler := handlerSkill.NewHandler(skillUC)
 	testHandler := handlerTest.NewHandler(testUC)
-	userHandler := handlerUser.NewHandler(skillUC)
+	userHandler := handlerUser.NewHandler(userUC)
 	vacancyHandler := handlerVacancy.NewHandler(vacancyUC)
-	//
-
 	log.Println("handlers created")
 
-	return []interface{}{testHandler, questionHandler, answerHandler, vacancyHandler, skillHandler}
+	return []interface{}{testHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}
 }
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
@@ -97,28 +104,32 @@ func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 			router.POST(handler.AnswersPath, h.UpsertHandle)
 			router.GET(handler.AnswersPath, h.ReadHandle)
 			router.DELETE(handler.AnswersPath, h.DeleteHandle)
+			log.Println("answers handler registered")
 		case *handlerQuestion.Handler:
 			router.POST(handler.QuestionsPath, h.UpsertHandle)
 			router.GET(handler.QuestionsPath, h.ReadHandle)
 			router.DELETE(handler.QuestionsPath, h.DeleteHandle)
+			log.Println("questions handler registered")
 		case *handlerSkill.Handler:
-			router.POST(handler.SkillPath, h.UpsertHandle)
-			router.GET(handler.SkillPath, h.ReadHandle)
-			router.DELETE(handler.SkillPath, h.DeleteHandle)
+			router.POST(handler.SkillsPath, h.UpsertHandle)
+			router.GET(handler.SkillsPath, h.ReadHandle)
+			router.DELETE(handler.SkillsPath, h.DeleteHandle)
+			log.Println("skills handler registered")
 		case *handlerTest.Handler:
 			router.POST(handler.TestsPath, h.UpsertHandle)
 			router.GET(handler.TestsPath, h.ReadHandle)
 			router.DELETE(handler.TestsPath, h.DeleteHandle)
+			log.Println("tests handler registered")
 		case *handlerUser.Handler:
 			router.POST(handler.UsersPath, h.UpsertHandle)
 			router.GET(handler.UsersPath, h.ReadHandle)
 			router.DELETE(handler.UsersPath, h.DeleteHandle)
+			log.Println("users handler registered")
 		case *handlerVacancy.Handler:
-			router.POST(handler.VacancyPath, h.UpsertHandle)
-			router.GET(handler.VacancyPath, h.ReadHandle)
-			router.DELETE(handler.VacancyPath, h.DeleteHandle)
-		default:
-			// todo log
+			router.POST(handler.VacanciesPath, h.UpsertHandle)
+			router.GET(handler.VacanciesPath, h.ReadHandle)
+			router.DELETE(handler.VacanciesPath, h.DeleteHandle)
+			log.Println("vacancies handler registered")
 		}
 	}
 
