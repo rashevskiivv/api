@@ -9,6 +9,8 @@ TAG=latest
 RELEASE_NAME=api
 DC_FILE=-f ${CUR_DIR}/deployment/docker-compose.yaml
 
+.PHONY: compile copy-env copy-env-windows deploy deploy-app deploy-postgres delete delete-app delete-postgres
+
 compile:
 	docker build --no-cache -f .docker/Dockerfile -t ${IMAGE}:${TAG} --target builder .
 
@@ -27,9 +29,6 @@ deploy-app:
 deploy-postgres:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d postgres_db postgres_migrate
 
-deploy-redis:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d redis_db
-
 delete:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf
 
@@ -38,6 +37,3 @@ delete-app:
 
 delete-postgres:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf postgres_db postgres_migrate
-
-delete-redis:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf redis_db
