@@ -4,7 +4,7 @@ else
 CUR_DIR=$(shell pwd)
 endif
 
-IMAGE=api
+IMAGE=api_local
 TAG=latest
 RELEASE_NAME=api
 DC_FILE=-f ${CUR_DIR}/deployment/docker-compose.yaml
