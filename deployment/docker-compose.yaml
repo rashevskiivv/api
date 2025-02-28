@@ -12,7 +12,7 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
       - postgres_db
-    command: [ "/go/bin/app" ]
+    command: [ "/go/bin/api-app" ]
 
   postgres_db:
     container_name: postgres_db

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	repositoryUser "tax-api/internal/repository/user"
 	usecaseUser "tax-api/internal/usecase/user"
 
@@ -56,7 +57,7 @@ func main() {
 	}
 
 	// Running
-	err = router.Run(fmt.Sprintf("localhost:%v", appPort))
+	err = router.Run(fmt.Sprintf(":%v", strconv.Itoa(appPort)))
 	if err != nil {
 		log.Fatalf("got error while running: %v", err)
 	}
