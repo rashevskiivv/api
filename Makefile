@@ -4,13 +4,26 @@ else
 CUR_DIR=$(shell pwd)
 endif
 
-IMAGE=tax_api
-TAG=latest
-RELEASE_NAME=tax-api
+APP_IMAGE=api_local
+APP_TAG=latest
+DB_IMAGE=api_db
+DB_TAG=latest
+RELEASE_NAME=api
 DC_FILE=-f ${CUR_DIR}/deployment/docker-compose.yaml
 
+.PHONY: compile compile-db copy-env copy-env-windows deploy deploy-app deploy-postgres delete delete-app delete-postgres
+
 compile:
-	docker build --no-cache -f .docker/Dockerfile -t ${IMAGE}:${TAG} --target builder .
+	docker build --no-cache -f .docker/Dockerfile -t ${APP_IMAGE}:${APP_TAG} --target builder .
+
+compile-db:
+	docker build --no-cache -f .docker/PGDockerfile -t ${DB_IMAGE}:${DB_TAG} .
+
+copy-env:
+	cp deployment/.env.example deployment/.env
+
+copy-env-windows:
+	copy deployment\.env.example deployment\.env
 
 deploy:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d
@@ -21,9 +34,6 @@ deploy-app:
 deploy-postgres:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d postgres_db postgres_migrate
 
-deploy-redis:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d redis_db
-
 delete:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf
 
@@ -32,6 +42,3 @@ delete-app:
 
 delete-postgres:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf postgres_db postgres_migrate
-
-delete-redis:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf redis_db
