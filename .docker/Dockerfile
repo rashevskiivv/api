@@ -1,6 +1,6 @@
-FROM golang:1.22 AS builder
+FROM golang:1.24 AS builder
 
-WORKDIR /tax_api
+WORKDIR /api
 
 COPY go.mod go.sum ./
 
@@ -8,16 +8,16 @@ RUN go mod download
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 80
 
-RUN go build -o /go/bin/app ./cmd/main.go
+RUN go build -o /go/bin/api-app ./cmd/main.go
 
 FROM alpine:3.20
 
-WORKDIR /tax-api
+WORKDIR /api
 
-COPY --from=builder /tax-api/internal/migration /migration
+COPY --from=builder /api/internal/migration /migration
 
-COPY --from=builder /go/bin/app /go/bin/app
+COPY --from=builder /go/bin/api-app /go/bin/api-app
 
-CMD ./go/bin/app
+CMD ./go/bin/api-app
