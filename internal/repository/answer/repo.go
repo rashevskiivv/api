@@ -25,6 +25,7 @@ func NewRepo(pg *repository.Postgres) *Repo {
 
 func (r *Repo) Upsert(ctx context.Context, input entity.Answer) (*entity.Answer, error) {
 	log.Println("answer upsert started")
+	defer log.Println("answer upsert done")
 	var id int64
 
 	const q = `INSERT INTO @table ("answer", "id_question", "is_right")
@@ -47,13 +48,13 @@ RETURNING id;`
 		log.Printf("unable to insert or update row: %v\n", err)
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
-	log.Println("answer upsert done")
 
 	return &entity.Answer{ID: &id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.Answer, error) {
 	log.Println("answer read started")
+	defer log.Println("answer read done")
 	var output []entity.Answer
 
 	q := r.builder.Select(
@@ -113,13 +114,13 @@ func (r *Repo) Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.A
 		log.Println(rows.Err())
 		return nil, rows.Err()
 	}
-	log.Println("answer read done")
 
 	return output, nil
 }
 
 func (r *Repo) Delete(ctx context.Context, filter entity.AnswerFilter) error {
 	log.Println("answer delete started")
+	defer log.Println("answer delete done")
 	q := r.builder.Delete(entity.TableNameAnswer)
 
 	// Where
@@ -152,7 +153,6 @@ func (r *Repo) Delete(ctx context.Context, filter entity.AnswerFilter) error {
 		log.Printf("unable to delete answers: %v\n", err)
 		return fmt.Errorf("unable to delete answers: %v", err)
 	}
-	log.Println("answer delete done")
 
 	return nil
 }

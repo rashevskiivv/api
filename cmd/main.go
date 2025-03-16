@@ -12,6 +12,7 @@ import (
 	"tax-api/internal/handler"
 
 	handlerAnswer "tax-api/internal/handler/answer"
+	handlerLink "tax-api/internal/handler/link"
 	handlerQuestion "tax-api/internal/handler/question"
 	handlerSkill "tax-api/internal/handler/skill"
 	handlerTest "tax-api/internal/handler/test"
@@ -21,12 +22,14 @@ import (
 	"tax-api/internal/repository"
 
 	repositoryAnswer "tax-api/internal/repository/answer"
+	repositoryLink "tax-api/internal/repository/link"
 	repositoryQuestion "tax-api/internal/repository/question"
 	repositorySkill "tax-api/internal/repository/skill"
 	repositoryTest "tax-api/internal/repository/test"
 	repositoryVacancy "tax-api/internal/repository/vacancy"
 
 	usecaseAnswer "tax-api/internal/usecase/answer"
+	usecaseLink "tax-api/internal/usecase/link"
 	usecaseQuestion "tax-api/internal/usecase/question"
 	usecaseSkill "tax-api/internal/usecase/skill"
 	usecaseTest "tax-api/internal/usecase/test"
@@ -66,6 +69,7 @@ func main() {
 func createHandlers(pg *repository.Postgres) []interface{} {
 	// Repo
 	answerRepo := repositoryAnswer.NewRepo(pg)
+	linkRepo := repositoryLink.NewRepo(pg)
 	questionRepo := repositoryQuestion.NewRepo(pg)
 	skillRepo := repositorySkill.NewRepo(pg)
 	testRepo := repositoryTest.NewRepo(pg)
@@ -75,6 +79,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 
 	// UseCase
 	answerUC := usecaseAnswer.NewUseCase(answerRepo)
+	linkUC := usecaseLink.NewUseCase(linkRepo)
 	questionUC := usecaseQuestion.NewUseCase(questionRepo)
 	skillUC := usecaseSkill.NewUseCase(skillRepo)
 	testUC := usecaseTest.NewUseCase(testRepo)
@@ -84,6 +89,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 
 	// Handler
 	answerHandler := handlerAnswer.NewHandler(answerUC)
+	linkHandler := handlerLink.NewHandler(linkUC)
 	questionHandler := handlerQuestion.NewHandler(questionUC)
 	skillHandler := handlerSkill.NewHandler(skillUC)
 	testHandler := handlerTest.NewHandler(testUC)
@@ -91,7 +97,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 	vacancyHandler := handlerVacancy.NewHandler(vacancyUC)
 	log.Println("handlers created")
 
-	return []interface{}{testHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}
+	return []interface{}{testHandler, linkHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}
 }
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
@@ -106,6 +112,27 @@ func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 			router.GET(handler.AnswersPath, h.ReadHandle)
 			router.DELETE(handler.AnswersPath, h.DeleteHandle)
 			log.Println("answers handler registered")
+		case *handlerLink.Handler:
+			router.POST(handler.LinksPath+handler.AnswerQuestionPath, h.UpsertAQHandle)
+			router.GET(handler.LinksPath+handler.AnswerQuestionPath, h.ReadAQHandle)
+			router.DELETE(handler.LinksPath+handler.AnswerQuestionPath, h.DeleteAQHandle)
+
+			router.POST(handler.LinksPath+handler.QuestionTestPath, h.UpsertQTHandle)
+			router.GET(handler.LinksPath+handler.QuestionTestPath, h.ReadQTHandle)
+			router.DELETE(handler.LinksPath+handler.QuestionTestPath, h.DeleteQTHandle)
+
+			router.POST(handler.LinksPath+handler.TestSkillPath, h.UpsertTSHandle)
+			router.GET(handler.LinksPath+handler.TestSkillPath, h.ReadTSHandle)
+			router.DELETE(handler.LinksPath+handler.TestSkillPath, h.DeleteTSHandle)
+
+			router.POST(handler.LinksPath+handler.UserSkillPath, h.UpsertUSHandle)
+			router.GET(handler.LinksPath+handler.UserSkillPath, h.ReadUSHandle)
+			router.DELETE(handler.LinksPath+handler.UserSkillPath, h.DeleteUSHandle)
+
+			router.POST(handler.LinksPath+handler.SkillVacancyPath, h.UpsertSVHandle)
+			router.GET(handler.LinksPath+handler.SkillVacancyPath, h.ReadSVHandle)
+			router.DELETE(handler.LinksPath+handler.SkillVacancyPath, h.DeleteSVHandle)
+			log.Println("links handler registered")
 		case *handlerQuestion.Handler:
 			router.POST(handler.QuestionsPath, h.UpsertHandle)
 			router.GET(handler.QuestionsPath, h.ReadHandle)
@@ -120,6 +147,8 @@ func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 			router.POST(handler.TestsPath, h.UpsertHandle)
 			router.GET(handler.TestsPath, h.ReadHandle)
 			router.DELETE(handler.TestsPath, h.DeleteHandle)
+			router.POST(handler.TestsPath+handler.StartPath, h.StartHandle)
+			router.POST(handler.TestsPath+handler.EndPath, h.EndHandle)
 			log.Println("tests handler registered")
 		case *handlerUser.Handler:
 			router.POST(handler.UsersPath, h.UpsertHandle)

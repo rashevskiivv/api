@@ -17,19 +17,21 @@ func NewUseCase(repo repositoryTest.Repository) *UseCase {
 
 func (uc *UseCase) UpsertTest(ctx context.Context, input entity.Test) (*entity.Test, error) {
 	log.Println("test usecase upsert started")
+	defer log.Println("test usecase upsert done")
 
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("test usecase upsert done")
 
 	return output, nil
 }
 
 func (uc *UseCase) ReadTests(ctx context.Context, input entity.TestFilter) ([]entity.Test, error) {
 	log.Println("test usecase read started")
+	defer log.Println("test usecase read done")
+
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -41,13 +43,14 @@ func (uc *UseCase) ReadTests(ctx context.Context, input entity.TestFilter) ([]en
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("test usecase read done")
 
 	return output, nil
 }
 
 func (uc *UseCase) DeleteTest(ctx context.Context, input entity.TestFilter) error {
 	log.Println("test usecase delete started")
+	defer log.Println("test usecase delete done")
+
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -59,7 +62,16 @@ func (uc *UseCase) DeleteTest(ctx context.Context, input entity.TestFilter) erro
 		log.Println(err)
 		return err
 	}
-	log.Println("test usecase delete done")
 
 	return nil
+}
+
+func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
+	// todo implement me
+	panic("")
+}
+
+func (uc *UseCase) EndTest(ctx context.Context, filter entity.EndTestInput) (*entity.EndTestOutput, error) {
+	// todo implement me
+	panic("")
 }

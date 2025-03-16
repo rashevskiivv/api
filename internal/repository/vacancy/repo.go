@@ -25,10 +25,16 @@ func NewRepo(pg *repository.Postgres) *Repo {
 
 func (r *Repo) Upsert(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
 	log.Println("vacancy upsert started")
+	defer log.Println("vacancy upsert done")
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "grade", "date", "description")
 VALUES (@title, @grade, @date, @description)
+ON CONFLICT ON CONSTRAINT vacancy_ukey
+	DO UPDATE SET title       	= EXCLUDED.title,
+				  grade			= EXCLUDED.grade,
+				  "date"		= EXCLUDED.date,
+				  description	= EXCLUDED.description
 RETURNING id;`
 	args := pgx.NamedArgs{
 		"table":       entity.TableNameVacancy,
@@ -43,13 +49,13 @@ RETURNING id;`
 		log.Printf("unable to insert or update row: %v\n", err)
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
-	log.Println("vacancy upsert done")
 
 	return &entity.Vacancy{ID: &id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.Vacancy, error) {
 	log.Println("vacancy read started")
+	defer log.Println("vacancy read done")
 	var output []entity.Vacancy
 
 	q := r.builder.Select(
@@ -114,13 +120,13 @@ func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.
 		log.Println(rows.Err())
 		return nil, rows.Err()
 	}
-	log.Println("vacancy read done")
 
 	return output, nil
 }
 
 func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
 	log.Println("vacancy delete started")
+	defer log.Println("vacancy delete done")
 	q := r.builder.Delete(entity.TableNameVacancy)
 
 	// Where
@@ -156,7 +162,6 @@ func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
 		log.Printf("unable to delete vacancies: %v\n", err)
 		return fmt.Errorf("unable to delete vacancies: %v", err)
 	}
-	log.Println("vacancy delete done")
 
 	return nil
 }

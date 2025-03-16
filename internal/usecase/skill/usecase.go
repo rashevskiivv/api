@@ -17,19 +17,21 @@ func NewUseCase(repo repositorySkill.Repository) *UseCase {
 
 func (uc *UseCase) UpsertSkill(ctx context.Context, input entity.Skill) (*entity.Skill, error) {
 	log.Println("skill usecase upsert started")
+	defer log.Println("skill usecase upsert done")
 
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("skill usecase upsert done")
 
 	return output, nil
 }
 
 func (uc *UseCase) ReadSkills(ctx context.Context, input entity.SkillFilter) ([]entity.Skill, error) {
 	log.Println("skill usecase read started")
+	defer log.Println("skill usecase read done")
+
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -41,13 +43,14 @@ func (uc *UseCase) ReadSkills(ctx context.Context, input entity.SkillFilter) ([]
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("skill usecase read done")
 
 	return output, nil
 }
 
 func (uc *UseCase) DeleteSkill(ctx context.Context, input entity.SkillFilter) error {
 	log.Println("skill usecase delete started")
+	defer log.Println("skill usecase delete done")
+
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -59,7 +62,6 @@ func (uc *UseCase) DeleteSkill(ctx context.Context, input entity.SkillFilter) er
 		log.Println(err)
 		return err
 	}
-	log.Println("skill usecase delete done")
 
 	return nil
 }

@@ -19,19 +19,20 @@ func NewUseCase(repo repositoryUser.Repository) *UseCase {
 
 func (uc *UseCase) UpsertUser(ctx context.Context, input entity.User) (*entity.User, error) {
 	log.Println("user usecase upsert started")
+	defer log.Println("user usecase upsert done")
 
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("user usecase upsert done")
 
 	return output, nil
 }
 
 func (uc *UseCase) ReadUsers(ctx context.Context, input entity.UserFilter) ([]entity.User, error) {
 	log.Println("user usecase read started")
+	defer log.Println("user usecase read done")
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -43,13 +44,13 @@ func (uc *UseCase) ReadUsers(ctx context.Context, input entity.UserFilter) ([]en
 		log.Println(err)
 		return nil, err
 	}
-	log.Println("user usecase read done")
 
 	return output, nil
 }
 
 func (uc *UseCase) DeleteUser(ctx context.Context, input entity.UserFilter) error {
 	log.Println("user usecase delete started")
+	defer log.Println("user usecase delete done")
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -61,7 +62,6 @@ func (uc *UseCase) DeleteUser(ctx context.Context, input entity.UserFilter) erro
 		log.Println(err)
 		return err
 	}
-	log.Println("user usecase delete done")
 
 	return nil
 }

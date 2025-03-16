@@ -25,10 +25,16 @@ func NewRepo(pg *repository.Postgres) *Repo {
 
 func (r *Repo) Upsert(ctx context.Context, input entity.Test) (*entity.Test, error) {
 	log.Println("test upsert started")
+	defer log.Println("test upsert done")
 	var id int64
 
 	const q = `INSERT INTO @table ("title", "description", "average_passing_time", "id_skill")
 VALUES (@title, @description, @average_passing_time, @id_skill)
+ON CONFLICT ON CONSTRAINT test_ukey
+	DO UPDATE SET title       			= EXCLUDED.title,
+				  description			= EXCLUDED.description,
+				  average_passing_time	= EXCLUDED.average_passing_time,
+				  id_skill 				= EXCLUDED.id_skill
 RETURNING id;`
 	args := pgx.NamedArgs{
 		"table":                entity.TableNameTest,
@@ -43,13 +49,13 @@ RETURNING id;`
 		log.Printf("unable to insert or update row: %v\n", err)
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
-	log.Println("test upsert done")
 
 	return &entity.Test{ID: &id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Test, error) {
 	log.Println("test read started")
+	defer log.Println("test read done")
 	var output []entity.Test
 
 	q := r.builder.Select(
@@ -114,13 +120,13 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 		log.Println(rows.Err())
 		return nil, rows.Err()
 	}
-	log.Println("test read done")
 
 	return output, nil
 }
 
 func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 	log.Println("test delete started")
+	defer log.Println("test delete done")
 	q := r.builder.Delete(entity.TableNameTest)
 
 	// Where
@@ -156,7 +162,6 @@ func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 		log.Printf("unable to delete tests: %v\n", err)
 		return fmt.Errorf("unable to delete tests: %v", err)
 	}
-	log.Println("test delete done")
 
 	return nil
 }

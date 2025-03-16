@@ -9,11 +9,21 @@ import (
 
 const (
 	AnswersPath   = "/answers"
+	LinksPath     = "/links"
 	QuestionsPath = "/questions"
 	SkillsPath    = "/skills"
 	TestsPath     = "/tests"
 	UsersPath     = "/users"
 	VacanciesPath = "/vacancies"
+
+	StartPath = "/start"
+	EndPath   = "/end"
+
+	AnswerQuestionPath = "/answer_question"
+	QuestionTestPath   = "/question_test"
+	TestSkillPath      = "/test_skill"
+	UserSkillPath      = "/user_skill"
+	SkillVacancyPath   = "/skill_vacancy"
 )
 
 // NotFound Not found page handler.
