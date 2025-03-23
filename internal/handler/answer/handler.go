@@ -1,8 +1,6 @@
 package answer
 
 import (
-	"errors"
-	"io"
 	"log"
 	"net/http"
 	"tax-api/internal/entity"
@@ -31,9 +29,6 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	defer log.Println("Upsert answer handle finished")
 
 	err = ctx.ShouldBind(&input)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -58,7 +53,7 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 func (h *Handler) ReadHandle(ctx *gin.Context) {
 	var (
 		filter   entity.AnswerFilter
-		answers  []entity.Answer
+		output   []entity.Answer
 		response entity.Response
 		err      error
 	)
@@ -67,9 +62,6 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	defer log.Println("Read answers handle finished")
 
 	err = ctx.ShouldBind(&filter)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -77,21 +69,21 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 		return
 	}
 
-	answers, err = h.uc.ReadAnswers(ctx, filter)
+	output, err = h.uc.ReadAnswers(ctx, filter)
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
 	}
-	if len(answers) == 0 {
+	if len(output) == 0 {
 		log.Println("Data not found")
 		response.Errors = "Data not found"
 		ctx.AbortWithStatusJSON(http.StatusNotFound, response)
 		return
 	}
 
-	response.Data = answers
+	response.Data = output
 	ctx.JSON(http.StatusOK, response)
 	return
 }
@@ -107,9 +99,6 @@ func (h *Handler) DeleteHandle(ctx *gin.Context) {
 	defer log.Println("Delete answer handle finished")
 
 	err = ctx.ShouldBind(&filter)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()

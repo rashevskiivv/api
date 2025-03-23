@@ -1,8 +1,6 @@
 package skill
 
 import (
-	"errors"
-	"io"
 	"log"
 	"net/http"
 	"tax-api/internal/entity"
@@ -33,9 +31,6 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	defer log.Println("Upsert skill handle finished")
 
 	err = ctx.ShouldBind(&input)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -69,9 +64,6 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	defer log.Println("Read skills handle finished")
 
 	err = ctx.ShouldBind(&filter)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -110,9 +102,6 @@ func (h *Handler) DeleteHandle(ctx *gin.Context) {
 	defer log.Println("Delete skill handle finished")
 
 	err = ctx.ShouldBind(&filter)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()

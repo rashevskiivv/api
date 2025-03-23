@@ -34,6 +34,9 @@ func (f *TestFilter) Validate() error {
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. title contains \"drop\". It is restricted", i)
 			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("title contains \"delete\". It is restricted")
+			}
 		}
 	}
 
@@ -48,6 +51,9 @@ func (f *TestFilter) Validate() error {
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. description contains \"drop\". It is restricted", i)
 			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("description contains \"delete\". It is restricted")
+			}
 		}
 	}
 
@@ -61,6 +67,9 @@ func (f *TestFilter) Validate() error {
 			}
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. average_passing_time contains \"drop\". It is restricted", i)
+			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("average_passing_time contains \"delete\". It is restricted")
 			}
 		}
 	}

@@ -19,6 +19,12 @@ func (uc *UseCase) UpsertAnswer(ctx context.Context, input entity.Answer) (*enti
 	log.Println("answer usecase upsert started")
 	defer log.Println("answer usecase upsert done")
 
+	err := input.Validate()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
 		log.Println(err)

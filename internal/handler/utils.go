@@ -19,11 +19,9 @@ const (
 	StartPath = "/start"
 	EndPath   = "/end"
 
-	AnswerQuestionPath = "/answer_question"
-	QuestionTestPath   = "/question_test"
-	TestSkillPath      = "/test_skill"
-	UserSkillPath      = "/user_skill"
-	SkillVacancyPath   = "/skill_vacancy"
+	TestSkillPath    = "/test_skill"
+	UserSkillPath    = "/user_skill"
+	SkillVacancyPath = "/skill_vacancy"
 )
 
 // NotFound Not found page handler.

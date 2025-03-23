@@ -7,4 +7,7 @@ const (
 	TableNameUser     = "user"
 	TableNameVacancy  = "vacancy"
 	TableNameSkill    = "skill"
+
+	TableSkillVacancy = "skill_vacancy"
+	TableUserSkill    = "user_skill"
 )

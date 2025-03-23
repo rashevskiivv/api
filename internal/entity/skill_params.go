@@ -31,6 +31,9 @@ func (f *SkillFilter) Validate() error {
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. title contains \"drop\". It is restricted", i)
 			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("%v. title contains \"delete\". It is restricted", i)
+			}
 		}
 	}
 
