@@ -108,5 +108,48 @@ func (r *Repo) ReadSkillVacancy(ctx context.Context, filter entity.SkillVacancyF
 }
 
 func (r *Repo) DeleteSkillVacancy(ctx context.Context, filter entity.SkillVacancyFilter) error {
+	log.Println("skill-vacancy delete started")
+	defer log.Println("skill-vacancy delete done")
+	q := r.builder.Delete(entity.TableSkillVacancy)
 
+	// Where
+	// Skill part
+	if len(filter.SF.ID) > 0 {
+		q = q.Where(squirrel.Eq{"skill.id": filter.SF.ID})
+	}
+	if len(filter.SF.Title) > 0 {
+		q = q.Where(squirrel.Eq{"skill.title": filter.SF.Title})
+	}
+	// Vacancy part
+	if len(filter.VF.Title) > 0 {
+		q = q.Where(squirrel.Eq{"vacancy.title": filter.VF.Title})
+	}
+	if len(filter.VF.Grade) > 0 {
+		q = q.Where(squirrel.Eq{"vacancy.grade": filter.VF.Grade})
+	}
+	if len(filter.VF.Date) > 0 {
+		q = q.Where(squirrel.Eq{"vacancy.date": filter.VF.Date})
+	}
+	if len(filter.VF.Description) > 0 {
+		q = q.Where(squirrel.Eq{"vacancy.description": filter.VF.Description})
+	}
+
+	// Limit
+	if filter.Limit != 0 {
+		q = q.Limit(uint64(filter.Limit))
+	}
+
+	sql, args, err := q.ToSql()
+	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
+		return fmt.Errorf("unable to convert query to sql: %v", err)
+	}
+
+	_, err = r.DB.Exec(ctx, sql, args...)
+	if err != nil {
+		log.Printf("unable to delete skill-vacancy: %v\n", err)
+		return fmt.Errorf("unable to delete skill-vacancy: %v", err)
+	}
+
+	return nil
 }
