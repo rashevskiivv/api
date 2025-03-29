@@ -114,7 +114,6 @@ func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 			log.Println("answers handler registered")
 		case *handlerLink.Handler:
 			router.POST(handler.LinksPath+handler.TestSkillPath, h.UpsertTSHandle)
-			router.GET(handler.LinksPath+handler.TestSkillPath, h.ReadTSHandle)
 			router.DELETE(handler.LinksPath+handler.TestSkillPath, h.DeleteTSHandle)
 
 			router.POST(handler.LinksPath+handler.UserSkillPath, h.UpsertUSHandle)

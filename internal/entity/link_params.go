@@ -75,9 +75,10 @@ func (f *TestSkillFilter) Validate() error {
 }
 
 type UserSkillFilter struct {
-	UF    UserFilter
-	SF    SkillFilter
-	Limit uint `json:"limit,omitempty"`
+	UF               UserFilter
+	SF               SkillFilter
+	ProficiencyLevel []int `json:"proficiency_level,omitempty"`
+	Limit            uint  `json:"limit,omitempty"`
 }
 
 func (f *UserSkillFilter) Validate() error {

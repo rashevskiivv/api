@@ -34,7 +34,7 @@ ON CONFLICT ON CONSTRAINT skill_ukey
 	DO UPDATE SET title	= EXCLUDED.title
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table": entity.TableNameSkill,
+		"table": entity.TableSkill,
 		"title": input.Title,
 	}
 
@@ -55,7 +55,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.SkillFilter) ([]entity.Sk
 	q := r.builder.Select(
 		"id",
 		"title",
-	).From(entity.TableNameSkill)
+	).From(entity.TableSkill)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -106,7 +106,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.SkillFilter) ([]entity.Sk
 func (r *Repo) Delete(ctx context.Context, filter entity.SkillFilter) error {
 	log.Println("skill delete started")
 	defer log.Println("skill delete done")
-	q := r.builder.Delete(entity.TableNameSkill)
+	q := r.builder.Delete(entity.TableSkill)
 
 	// Where
 	if len(filter.ID) > 0 {

@@ -1,12 +1,12 @@
 package entity
 
 const (
-	TableNameQuestion = "question"
-	TableNameTest     = "test"
-	TableNameAnswer   = "answer"
-	TableNameUser     = "user"
-	TableNameVacancy  = "vacancy"
-	TableNameSkill    = "skill"
+	TableQuestion = "question"
+	TableTest     = "test"
+	TableAnswer   = "answer"
+	TableUser     = "user"
+	TableVacancy  = "vacancy"
+	TableSkill    = "skill"
 
 	TableSkillVacancy = "skill_vacancy"
 	TableUserSkill    = "user_skill"

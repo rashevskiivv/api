@@ -37,7 +37,7 @@ ON CONFLICT ON CONSTRAINT test_ukey
 				  id_skill 				= EXCLUDED.id_skill
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":                entity.TableNameTest,
+		"table":                entity.TableTest,
 		"title":                input.Title,
 		"description":          input.Description,
 		"average_passing_time": input.AveragePassingTime,
@@ -64,7 +64,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 		"description",
 		"average_passing_time",
 		"id_skill",
-	).From(entity.TableNameTest)
+	).From(entity.TableTest)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -127,7 +127,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 	log.Println("test delete started")
 	defer log.Println("test delete done")
-	q := r.builder.Delete(entity.TableNameTest)
+	q := r.builder.Delete(entity.TableTest)
 
 	// Where
 	if len(filter.ID) > 0 {

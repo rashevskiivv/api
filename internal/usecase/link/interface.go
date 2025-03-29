@@ -7,7 +7,6 @@ import (
 
 type UseCaseI interface {
 	UpsertTS(ctx context.Context, input entity.TestSkill) error
-	ReadTS(ctx context.Context, filter entity.TestSkillFilter) ([]entity.TestSkill, error)
 	DeleteTS(ctx context.Context, filter entity.TestSkillFilter) error
 
 	UpsertUS(ctx context.Context, input entity.UserSkill) error

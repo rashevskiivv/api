@@ -40,8 +40,9 @@ func (f *TestSkill) Validate() error {
 }
 
 type UserSkill struct {
-	U User  `json:"user"`
-	S Skill `json:"skill"`
+	U                User  `json:"user"`
+	S                Skill `json:"skill"`
+	ProficiencyLevel int   `json:"proficiency_level"`
 }
 
 func (f *UserSkill) Validate() error {

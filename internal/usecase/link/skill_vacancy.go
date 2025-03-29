@@ -57,5 +57,4 @@ func (uc *UseCase) DeleteSV(ctx context.Context, input entity.SkillVacancyFilter
 		log.Println(err)
 	}
 	return err
-
 }

@@ -37,7 +37,7 @@ ON CONFLICT ON CONSTRAINT vacancy_ukey
 				  description	= EXCLUDED.description
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":       entity.TableNameVacancy,
+		"table":       entity.TableVacancy,
 		"title":       input.Title,
 		"grade":       input.Grade,
 		"date":        input.Date,
@@ -64,7 +64,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.
 		"grade",
 		"date",
 		"description",
-	).From(entity.TableNameVacancy)
+	).From(entity.TableVacancy)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -127,7 +127,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.VacancyFilter) ([]entity.
 func (r *Repo) Delete(ctx context.Context, filter entity.VacancyFilter) error {
 	log.Println("vacancy delete started")
 	defer log.Println("vacancy delete done")
-	q := r.builder.Delete(entity.TableNameVacancy)
+	q := r.builder.Delete(entity.TableVacancy)
 
 	// Where
 	if len(filter.ID) > 0 {

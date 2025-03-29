@@ -7,34 +7,35 @@ import (
 )
 
 func (uc *UseCase) UpsertTS(ctx context.Context, input entity.TestSkill) error {
+	log.Println("test-skill usecase upsert started")
+	defer log.Println("test-skill usecase upsert done")
+
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	return nil
-
-}
-
-func (uc *UseCase) ReadTS(ctx context.Context, filter entity.TestSkillFilter) ([]entity.TestSkill, error) {
-	err := filter.Validate()
+	err = uc.repo.UpsertTestSkill(ctx, input)
 	if err != nil {
 		log.Println(err)
-		return nil, err
 	}
-
-	return nil
-
+	return err
 }
 
-func (uc *UseCase) DeleteTS(ctx context.Context, filter entity.TestSkillFilter) error {
-	err := filter.Validate()
+func (uc *UseCase) DeleteTS(ctx context.Context, input entity.TestSkillFilter) error {
+	log.Println("test-skill usecase delete started")
+	defer log.Println("test-skill usecase delete done")
+
+	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	return nil
-
+	err = uc.repo.DeleteTestSkill(ctx, input)
+	if err != nil {
+		log.Println(err)
+	}
+	return err
 }

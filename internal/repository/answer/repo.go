@@ -37,7 +37,7 @@ ON CONFLICT ON CONSTRAINT answer_ukey
 RETURNING id;`
 
 	args := pgx.NamedArgs{
-		"table":       entity.TableNameAnswer,
+		"table":       entity.TableAnswer,
 		"answer":      input.Answer,
 		"id_question": input.IDQuestion,
 		"is_right":    input.IsRight,
@@ -62,7 +62,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.A
 		"answer",
 		"id_question",
 		"is_right",
-	).From(entity.TableNameAnswer)
+	).From(entity.TableAnswer)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -121,7 +121,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.AnswerFilter) ([]entity.A
 func (r *Repo) Delete(ctx context.Context, filter entity.AnswerFilter) error {
 	log.Println("answer delete started")
 	defer log.Println("answer delete done")
-	q := r.builder.Delete(entity.TableNameAnswer)
+	q := r.builder.Delete(entity.TableAnswer)
 
 	// Where
 	if len(filter.ID) > 0 {

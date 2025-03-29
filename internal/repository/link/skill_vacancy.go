@@ -13,10 +13,8 @@ import (
 func (r *Repo) UpsertSkillVacancy(ctx context.Context, input entity.SkillVacancy) error {
 	log.Println("skill-vacancy upsert started")
 	defer log.Println("skill-vacancy upsert done")
-	var id int64
 
-	const q = `INSERT INTO @table ("id_vacancy", "id_skill")
-VALUES (@id_vacancy, @id_skill);`
+	const q = `INSERT INTO @table ("id_vacancy", "id_skill") VALUES (@id_vacancy, @id_skill);`
 
 	args := pgx.NamedArgs{
 		"table":      entity.TableSkillVacancy,
@@ -24,7 +22,7 @@ VALUES (@id_vacancy, @id_skill);`
 		"id_skill":   input.S.ID,
 	}
 
-	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
+	_, err := r.DB.Exec(ctx, q, args)
 	if err != nil {
 		log.Printf("unable to insert or update row: %v\n", err)
 		return fmt.Errorf("unable to insert or update row: %v", err)
@@ -33,7 +31,7 @@ VALUES (@id_vacancy, @id_skill);`
 	return nil
 }
 
-func (r *Repo) ReadSkillVacancy(ctx context.Context, filter entity.SkillVacancyFilter) ([]entity.SkillVacancy, error) {
+func (r *Repo) ReadSkillVacancy(ctx context.Context, input entity.SkillVacancyFilter) ([]entity.SkillVacancy, error) {
 	log.Println("skill-vacancy read started")
 	defer log.Println("skill-vacancy read done")
 	var output []entity.SkillVacancy
@@ -45,29 +43,17 @@ func (r *Repo) ReadSkillVacancy(ctx context.Context, filter entity.SkillVacancyF
 
 	// Where
 	// Skill part
-	if len(filter.SF.ID) > 0 {
-		q = q.Where(squirrel.Eq{"skill.id": filter.SF.ID})
-	}
-	if len(filter.SF.Title) > 0 {
-		q = q.Where(squirrel.Eq{"skill.title": filter.SF.Title})
+	if len(input.SF.ID) > 0 {
+		q = q.Where(squirrel.Eq{"id_skill": input.SF.ID})
 	}
 	// Vacancy part
-	if len(filter.VF.Title) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.title": filter.VF.Title})
-	}
-	if len(filter.VF.Grade) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.grade": filter.VF.Grade})
-	}
-	if len(filter.VF.Date) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.date": filter.VF.Date})
-	}
-	if len(filter.VF.Description) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.description": filter.VF.Description})
+	if len(input.VF.ID) > 0 {
+		q = q.Where(squirrel.Eq{"id_vacancy": input.VF.ID})
 	}
 
 	// Limit
-	if filter.Limit != 0 {
-		q = q.Limit(uint64(filter.Limit))
+	if input.Limit != 0 {
+		q = q.Limit(uint64(input.Limit))
 	}
 
 	sql, args, err := q.ToSql()
@@ -107,36 +93,24 @@ func (r *Repo) ReadSkillVacancy(ctx context.Context, filter entity.SkillVacancyF
 	return output, nil
 }
 
-func (r *Repo) DeleteSkillVacancy(ctx context.Context, filter entity.SkillVacancyFilter) error {
+func (r *Repo) DeleteSkillVacancy(ctx context.Context, input entity.SkillVacancyFilter) error {
 	log.Println("skill-vacancy delete started")
 	defer log.Println("skill-vacancy delete done")
 	q := r.builder.Delete(entity.TableSkillVacancy)
 
 	// Where
 	// Skill part
-	if len(filter.SF.ID) > 0 {
-		q = q.Where(squirrel.Eq{"skill.id": filter.SF.ID})
-	}
-	if len(filter.SF.Title) > 0 {
-		q = q.Where(squirrel.Eq{"skill.title": filter.SF.Title})
+	if len(input.SF.ID) > 0 {
+		q = q.Where(squirrel.Eq{"id_skill": input.SF.ID})
 	}
 	// Vacancy part
-	if len(filter.VF.Title) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.title": filter.VF.Title})
-	}
-	if len(filter.VF.Grade) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.grade": filter.VF.Grade})
-	}
-	if len(filter.VF.Date) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.date": filter.VF.Date})
-	}
-	if len(filter.VF.Description) > 0 {
-		q = q.Where(squirrel.Eq{"vacancy.description": filter.VF.Description})
+	if len(input.VF.ID) > 0 {
+		q = q.Where(squirrel.Eq{"id_vacancy": input.VF.ID})
 	}
 
 	// Limit
-	if filter.Limit != 0 {
-		q = q.Limit(uint64(filter.Limit))
+	if input.Limit != 0 {
+		q = q.Limit(uint64(input.Limit))
 	}
 
 	sql, args, err := q.ToSql()

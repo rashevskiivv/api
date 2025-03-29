@@ -2,17 +2,52 @@ package link
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"tax-api/internal/entity"
+
+	"github.com/jackc/pgx/v5"
 )
 
-func (r *Repo) UpsertTestSkill(ctx context.Context, input entity.TestSkill) (*entity.TestSkill, error) {
+func (r *Repo) UpsertTestSkill(ctx context.Context, input entity.TestSkill) error {
+	log.Println("test-skill upsert started")
+	defer log.Println("test-skill upsert done")
 
+	const q = `UPDATE @table
+SET "id_skill"=@id_skill
+WHERE "id"=@id_test;`
+
+	args := pgx.NamedArgs{
+		"table":    entity.TableTest,
+		"id_skill": input.S.ID,
+		"id_test":  input.T.ID,
+	}
+
+	_, err := r.DB.Exec(ctx, q, args)
+	if err != nil {
+		log.Printf("unable to insert or update row: %v\n", err)
+		return fmt.Errorf("unable to insert or update row: %v", err)
+	}
+
+	return nil
 }
 
-func (r *Repo) ReadTestSkill(ctx context.Context, filter entity.TestSkillFilter) ([]entity.TestSkill, error) {
+func (r *Repo) DeleteTestSkill(ctx context.Context, input entity.TestSkillFilter) error {
+	log.Println("test-skill delete started")
+	defer log.Println("test-skill delete done")
 
-}
+	const q = `UPDATE @table SET "id_skill"=null WHERE "id"=@id_test;`
 
-func (r *Repo) DeleteTestSkill(ctx context.Context, filter entity.TestSkillFilter) error {
+	args := pgx.NamedArgs{
+		"table":   entity.TableTest,
+		"id_test": input.TF.ID,
+	}
 
+	_, err := r.DB.Exec(ctx, q, args)
+	if err != nil {
+		log.Printf("unable to insert or update row: %v\n", err)
+		return fmt.Errorf("unable to insert or update row: %v", err)
+	}
+
+	return nil
 }

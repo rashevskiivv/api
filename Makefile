@@ -32,7 +32,7 @@ deploy-app:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d app
 
 deploy-postgres:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d postgres_db postgres_migrate
+	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d api-db postgres_migrate
 
 delete:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf
@@ -41,4 +41,4 @@ delete-app:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf app
 
 delete-postgres:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf postgres_db postgres_migrate
+	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf api-db postgres_migrate

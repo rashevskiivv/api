@@ -35,7 +35,7 @@ ON CONFLICT ON CONSTRAINT question_ukey
 				  id_test	= EXCLUDED.id_test
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":    entity.TableNameQuestion,
+		"table":    entity.TableQuestion,
 		"question": input.Question,
 		"id_test":  input.IDTest,
 	}
@@ -58,7 +58,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.QuestionFilter) ([]entity
 		"id",
 		"question",
 		"id_test",
-	).From(entity.TableNameQuestion)
+	).From(entity.TableQuestion)
 
 	// Where
 	if len(filter.ID) > 0 {
@@ -113,7 +113,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.QuestionFilter) ([]entity
 func (r *Repo) Delete(ctx context.Context, filter entity.QuestionFilter) error {
 	log.Println("question delete started")
 	defer log.Println("question delete done")
-	q := r.builder.Delete(entity.TableNameQuestion)
+	q := r.builder.Delete(entity.TableQuestion)
 
 	// Where
 	if len(filter.ID) > 0 {
