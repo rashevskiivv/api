@@ -11,5 +11,5 @@ type UseCaseI interface {
 	DeleteTest(ctx context.Context, input entity.TestFilter) error
 
 	StartTest(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error)
-	EndTest(ctx context.Context, filter entity.EndTestInput) (*entity.EndTestOutput, error)
+	EndTest(ctx context.Context, filter entity.EndTestInput) error
 }

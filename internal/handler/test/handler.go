@@ -121,9 +121,37 @@ func (h *Handler) DeleteHandle(ctx *gin.Context) {
 }
 
 func (h *Handler) StartHandle(ctx *gin.Context) {
+	var (
+		input    entity.StartTestInput
+		output   *entity.StartTestOutput
+		response entity.Response
+		err      error
+	)
 
+	log.Println("Start test handle started")
+	defer log.Println("Start test handle finished")
+
+	err = ctx.ShouldBind(&input)
+	if err != nil {
+		log.Println(err)
+		response.Errors = err.Error()
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+
+	output, err = h.uc.StartTest(ctx, input)
+	if err != nil {
+		log.Println(err)
+		response.Errors = err.Error()
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Data = output
+	ctx.JSON(http.StatusOK, response)
+	return
 }
 
 func (h *Handler) EndHandle(ctx *gin.Context) {
-
+	// todo implement me
 }

@@ -31,3 +31,9 @@ func (m *Question) Validate() error {
 
 	return nil
 }
+
+type QuestionToReturn struct {
+	ID       int64            `json:"id"`
+	Question string           `json:"question"`
+	Answers  []AnswerToReturn `json:"answers"`
+}

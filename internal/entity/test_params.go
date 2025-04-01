@@ -94,17 +94,23 @@ type StartTestInput struct {
 	IDUser int64 `json:"id_user"`
 }
 
+func (f *StartTestInput) Validate() error {
+	if f.IDUser <= 0 {
+		return fmt.Errorf("id_user can not be equal to zero or negative")
+	}
+	if f.IDTest <= 0 {
+		return fmt.Errorf("id_test can not be equal to zero or negative")
+	}
+	return nil
+}
+
 type StartTestOutput struct {
-	NumberOfQuestions int8  `json:"number_of_questions"`
-	IDFirstQuestion   int64 `json:"id_first_question"`
+	NumberOfQuestions int8               `json:"number_of_questions"`
+	Questions         []QuestionToReturn `json:"questions"`
 }
 
 type EndTestInput struct {
-	IDTest int64 `json:"id_test"`
-	IDUser int64 `json:"id_user"`
-}
-
-type EndTestOutput struct {
-	Score             int8 `json:"score"`
-	NumberOfQuestions int8 `json:"number_of_questions"`
+	IDTest                 int64 `json:"id_test"`
+	IDUser                 int64 `json:"id_user"`
+	NumberOfCorrectAnswers int8  `json:"number_of_correct_answers"`
 }

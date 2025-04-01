@@ -32,3 +32,9 @@ func (m *Answer) Validate() error {
 
 	return nil
 }
+
+type AnswerToReturn struct {
+	ID      int64  `json:"id"`
+	Answer  string `json:"answer"`
+	IsRight bool   `json:"is_right"`
+}

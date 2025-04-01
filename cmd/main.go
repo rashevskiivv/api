@@ -82,7 +82,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 	linkUC := usecaseLink.NewUseCase(linkRepo)
 	questionUC := usecaseQuestion.NewUseCase(questionRepo)
 	skillUC := usecaseSkill.NewUseCase(skillRepo)
-	testUC := usecaseTest.NewUseCase(testRepo)
+	testUC := usecaseTest.NewUseCase(testRepo, questionRepo, answerRepo)
 	userUC := usecaseUser.NewUseCase(userRepo)
 	vacancyUC := usecaseVacancy.NewUseCase(vacancyRepo)
 	log.Println("use cases created")

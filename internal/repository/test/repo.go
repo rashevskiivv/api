@@ -165,13 +165,3 @@ func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 
 	return nil
 }
-
-func (r *Repo) Start(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
-	// todo
-	panic("implement me")
-}
-
-func (r *Repo) End(ctx context.Context, filter entity.EndTestInput) (*entity.EndTestOutput, error) {
-	// todo
-	panic("implement me")
-}
