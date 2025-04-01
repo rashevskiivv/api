@@ -6,7 +6,7 @@ endif
 
 APP_IMAGE=api_local
 APP_TAG=latest
-DB_IMAGE=api_db
+DB_IMAGE=db
 DB_TAG=latest
 RELEASE_NAME=api
 DC_FILE=-f ${CUR_DIR}/deployment/docker-compose.yaml
@@ -32,7 +32,7 @@ deploy-app:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d app
 
 deploy-pg:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d api-db postgres_migrate
+	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} up -d db postgres_migrate
 
 delete:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf
@@ -41,4 +41,4 @@ delete-app:
 	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf app
 
 delete-pg:
-	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf api-db postgres_migrate
+	cd deployment && docker-compose ${DC_FILE} -p ${RELEASE_NAME} rm -sf db postgres_migrate

@@ -11,11 +11,11 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
-      - api-db
+      - db
     command: [ "/go/bin/api-app" ]
 
-  api-db:
-    container_name: api-db
+  db:
+    container_name: db
     image: ${POSTGRES_IMAGE}:${POSTGRES_IMAGE_TAG}
     restart: unless-stopped
     env_file:
@@ -37,7 +37,7 @@ services:
     volumes:
       - ../internal/migrations:/migrations
     depends_on:
-      - api-db
+      - db
     command: [
       "-locations=filesystem:/migrations/",
       "-url=jdbc:${POSTGRES_DRIVER}://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
