@@ -14,10 +14,9 @@ func (r *Repo) UpsertSkillVacancy(ctx context.Context, input entity.SkillVacancy
 	log.Println("skill-vacancy upsert started")
 	defer log.Println("skill-vacancy upsert done")
 
-	const q = `INSERT INTO @table ("id_vacancy", "id_skill") VALUES (@id_vacancy, @id_skill);`
+	const q = `INSERT INTO skill_vacancy ("id_vacancy", "id_skill") VALUES (@id_vacancy, @id_skill);`
 
 	args := pgx.NamedArgs{
-		"table":      entity.TableSkillVacancy,
 		"id_vacancy": input.V.ID,
 		"id_skill":   input.S.ID,
 	}

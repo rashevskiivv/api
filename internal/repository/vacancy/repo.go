@@ -28,7 +28,7 @@ func (r *Repo) Upsert(ctx context.Context, input entity.Vacancy) (*entity.Vacanc
 	defer log.Println("vacancy upsert done")
 	var id int64
 
-	const q = `INSERT INTO @table ("title", "grade", "date", "description")
+	const q = `INSERT INTO vacancy ("title", "grade", "date", "description")
 VALUES (@title, @grade, @date, @description)
 ON CONFLICT ON CONSTRAINT vacancy_ukey
 	DO UPDATE SET title       	= EXCLUDED.title,
@@ -37,7 +37,6 @@ ON CONFLICT ON CONSTRAINT vacancy_ukey
 				  description	= EXCLUDED.description
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":       entity.TableVacancy,
 		"title":       input.Title,
 		"grade":       input.Grade,
 		"date":        input.Date,

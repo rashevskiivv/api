@@ -14,11 +14,10 @@ func (r *Repo) UpsertUserSkill(ctx context.Context, input entity.UserSkill) erro
 	log.Println("user-skill upsert started")
 	defer log.Println("user-skill upsert done")
 
-	const q = `INSERT INTO @table ("id_user", "id_skill", "proficiency_level") 
+	const q = `INSERT INTO user_skill ("id_user", "id_skill", "proficiency_level") 
 VALUES (@id_user, @id_skill, @proficiency_level);`
 
 	args := pgx.NamedArgs{
-		"table":             entity.TableUserSkill,
 		"id_user":           input.U.ID,
 		"id_skill":          input.S.ID,
 		"proficiency_level": input.ProficiencyLevel,

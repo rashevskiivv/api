@@ -13,12 +13,11 @@ func (r *Repo) UpsertTestSkill(ctx context.Context, input entity.TestSkill) erro
 	log.Println("test-skill upsert started")
 	defer log.Println("test-skill upsert done")
 
-	const q = `UPDATE @table
+	const q = `UPDATE test
 SET "id_skill"=@id_skill
 WHERE "id"=@id_test;`
 
 	args := pgx.NamedArgs{
-		"table":    entity.TableTest,
 		"id_skill": input.S.ID,
 		"id_test":  input.T.ID,
 	}
@@ -36,10 +35,9 @@ func (r *Repo) DeleteTestSkill(ctx context.Context, input entity.TestSkillFilter
 	log.Println("test-skill delete started")
 	defer log.Println("test-skill delete done")
 
-	const q = `UPDATE @table SET "id_skill"=null WHERE "id"=@id_test;`
+	const q = `UPDATE test SET "id_skill"=null WHERE "id"=@id_test;`
 
 	args := pgx.NamedArgs{
-		"table":   entity.TableTest,
 		"id_test": input.TF.ID,
 	}
 

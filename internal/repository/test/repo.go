@@ -28,7 +28,7 @@ func (r *Repo) Upsert(ctx context.Context, input entity.Test) (*entity.Test, err
 	defer log.Println("test upsert done")
 	var id int64
 
-	const q = `INSERT INTO @table ("title", "description", "average_passing_time", "id_skill")
+	const q = `INSERT INTO test ("title", "description", "average_passing_time", "id_skill")
 VALUES (@title, @description, @average_passing_time, @id_skill)
 ON CONFLICT ON CONSTRAINT test_ukey
 	DO UPDATE SET title       			= EXCLUDED.title,
@@ -37,7 +37,6 @@ ON CONFLICT ON CONSTRAINT test_ukey
 				  id_skill 				= EXCLUDED.id_skill
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":                entity.TableTest,
 		"title":                input.Title,
 		"description":          input.Description,
 		"average_passing_time": input.AveragePassingTime,

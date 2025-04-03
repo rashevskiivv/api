@@ -28,14 +28,13 @@ func (r *Repo) Upsert(ctx context.Context, input entity.Question) (*entity.Quest
 	defer log.Println("question upsert done")
 	var id int64
 
-	const q = `INSERT INTO @table ("question", "id_test")
+	const q = `INSERT INTO question ("question", "id_test")
 VALUES (@question, @id_test)
 ON CONFLICT ON CONSTRAINT question_ukey
 	DO UPDATE SET question	= EXCLUDED.question,
 				  id_test	= EXCLUDED.id_test
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"table":    entity.TableQuestion,
 		"question": input.Question,
 		"id_test":  input.IDTest,
 	}
