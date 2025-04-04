@@ -1,8 +1,10 @@
 package skill
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"tax-api/internal/entity"
 	usecaseSkill "tax-api/internal/usecase/skill"
 
@@ -63,7 +65,7 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	log.Println("Read skills handle started")
 	defer log.Println("Read skills handle finished")
 
-	err = ctx.ShouldBind(&filter)
+	filter, err = getFilter(ctx)
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -88,7 +90,38 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	response.Data = skills
 	ctx.JSON(http.StatusOK, response)
 	return
+}
 
+func getFilter(ctx *gin.Context) (filter entity.SkillFilter, err error) {
+	var val int64
+	for k, v := range ctx.Request.URL.Query() {
+		switch k {
+		case "id":
+			vals := make([]int64, 0, len(v))
+			for _, s := range v {
+				val, err = strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					return filter, err
+				}
+				vals = append(vals, val)
+			}
+			filter.ID = vals
+		case "title":
+			filter.Title = v
+		case "limit":
+			if len(v) > 1 {
+				err = fmt.Errorf("limit accepts only 1 number")
+				return filter, err
+			}
+			val, err = strconv.ParseInt(v[0], 10, 64)
+			if err != nil {
+				return filter, err
+			}
+			filter.Limit = uint(val)
+		default:
+		}
+	}
+	return filter, nil
 }
 
 func (h *Handler) DeleteHandle(ctx *gin.Context) {

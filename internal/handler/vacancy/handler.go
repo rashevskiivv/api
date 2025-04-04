@@ -1,10 +1,13 @@
 package vacancy
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"tax-api/internal/entity"
 	usecaseVacancy "tax-api/internal/usecase/vacancy"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -63,7 +66,7 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	log.Println("Read vacancies handle started")
 	defer log.Println("Read vacancies handle finished")
 
-	err = ctx.ShouldBind(&filter)
+	filter, err = getFilter(ctx)
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -88,6 +91,55 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 	response.Data = answers
 	ctx.JSON(http.StatusOK, response)
 	return
+}
+
+func getFilter(ctx *gin.Context) (filter entity.VacancyFilter, err error) {
+	var (
+		val     int64
+		valTime time.Time
+	)
+	for k, v := range ctx.Request.URL.Query() {
+		switch k {
+		case "id":
+			vals := make([]int64, 0, len(v))
+			for _, s := range v {
+				val, err = strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					return filter, err
+				}
+				vals = append(vals, val)
+			}
+			filter.ID = vals
+		case "title":
+			filter.Title = v
+		case "grade":
+			filter.Grade = v
+		case "date":
+			vals := make([]time.Time, 0, len(v))
+			for _, s := range v {
+				valTime, err = time.Parse(time.DateTime, s)
+				if err != nil {
+					return filter, err
+				}
+				vals = append(vals, valTime)
+			}
+			filter.Date = vals
+		case "description":
+			filter.Description = v
+		case "limit":
+			if len(v) > 1 {
+				err = fmt.Errorf("limit accepts only 1 number")
+				return filter, err
+			}
+			val, err = strconv.ParseInt(v[0], 10, 64)
+			if err != nil {
+				return filter, err
+			}
+			filter.Limit = uint(val)
+		default:
+		}
+	}
+	return filter, nil
 }
 
 func (h *Handler) DeleteHandle(ctx *gin.Context) {
