@@ -28,7 +28,6 @@ func (h *Handler) UpsertTSHandle(ctx *gin.Context) {
 
 	err = h.uc.UpsertTS(ctx, input)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -59,7 +58,6 @@ func (h *Handler) DeleteTSHandle(ctx *gin.Context) {
 
 	err = h.uc.DeleteTS(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

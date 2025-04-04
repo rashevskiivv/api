@@ -30,7 +30,6 @@ func (h *Handler) UpsertSVHandle(ctx *gin.Context) {
 
 	err = h.uc.UpsertSV(ctx, input)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -62,7 +61,6 @@ func (h *Handler) ReadSVHandle(ctx *gin.Context) {
 
 	output, err = h.uc.ReadSV(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -139,7 +137,6 @@ func (h *Handler) DeleteSVHandle(ctx *gin.Context) {
 
 	err = h.uc.DeleteSV(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

@@ -30,7 +30,6 @@ func (h *Handler) UpsertUSHandle(ctx *gin.Context) {
 
 	err = h.uc.UpsertUS(ctx, input)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -62,7 +61,6 @@ func (h *Handler) ReadUSHandle(ctx *gin.Context) {
 
 	output, err = h.uc.ReadUS(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -149,7 +147,6 @@ func (h *Handler) DeleteUSHandle(ctx *gin.Context) {
 
 	err = h.uc.DeleteUS(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

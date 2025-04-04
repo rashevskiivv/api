@@ -25,9 +25,6 @@ func NewUseCase(repo repositoryTest.Repository, repoQuestions repositoryQuestion
 }
 
 func (uc *UseCase) UpsertTest(ctx context.Context, input entity.Test) (*entity.Test, error) {
-	log.Println("test usecase upsert started")
-	defer log.Println("test usecase upsert done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -36,7 +33,6 @@ func (uc *UseCase) UpsertTest(ctx context.Context, input entity.Test) (*entity.T
 
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -44,9 +40,6 @@ func (uc *UseCase) UpsertTest(ctx context.Context, input entity.Test) (*entity.T
 }
 
 func (uc *UseCase) ReadTests(ctx context.Context, input entity.TestFilter) ([]entity.Test, error) {
-	log.Println("test usecase read started")
-	defer log.Println("test usecase read done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -55,7 +48,6 @@ func (uc *UseCase) ReadTests(ctx context.Context, input entity.TestFilter) ([]en
 
 	output, err := uc.repo.Read(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -63,22 +55,13 @@ func (uc *UseCase) ReadTests(ctx context.Context, input entity.TestFilter) ([]en
 }
 
 func (uc *UseCase) DeleteTest(ctx context.Context, input entity.TestFilter) error {
-	log.Println("test usecase delete started")
-	defer log.Println("test usecase delete done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.Delete(ctx, input)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
+	return uc.repo.Delete(ctx, input)
 }
 
 func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
@@ -92,9 +75,6 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 	2.4 put into 1 struct
 	1.4 return json
 	*/
-	log.Println("test usecase start started")
-	defer log.Println("test usecase start done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -107,7 +87,6 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 	}
 	testOutput, err := uc.repo.Read(ctx, testInput)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	if len(testOutput) == 0 {
@@ -119,7 +98,6 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 	}
 	questionsOutput, err := uc.repoQuestions.Read(ctx, questionsInput)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	if len(questionsOutput) == 0 {
@@ -134,7 +112,6 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 		}
 		answersOutput, err := uc.repoAnswers.Read(ctx, answersInput)
 		if err != nil {
-			log.Println(err)
 			return nil, err
 		}
 		if len(answersOutput) == 0 {

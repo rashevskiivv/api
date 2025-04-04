@@ -27,7 +27,6 @@ const (
 // NotFound Not found page handler.
 func NotFound(c *gin.Context) {
 	b := entity.Response{
-		Data:    nil,
 		Message: "Page not found",
 		Errors:  "page not found",
 	}
@@ -37,9 +36,7 @@ func NotFound(c *gin.Context) {
 // HealthCheck Healthcheck page handler.
 func HealthCheck(c *gin.Context) {
 	b := entity.Response{
-		Data:    nil,
 		Message: "SERVING",
-		Errors:  "",
 	}
 	c.JSON(http.StatusOK, b)
 }

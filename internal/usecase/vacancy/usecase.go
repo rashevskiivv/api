@@ -16,9 +16,6 @@ func NewUseCase(repo repositoryVacancy.Repository) *UseCase {
 }
 
 func (uc *UseCase) UpsertVacancy(ctx context.Context, input entity.Vacancy) (*entity.Vacancy, error) {
-	log.Println("vacancy usecase upsert started")
-	defer log.Println("vacancy usecase upsert done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -27,7 +24,6 @@ func (uc *UseCase) UpsertVacancy(ctx context.Context, input entity.Vacancy) (*en
 
 	output, err := uc.repo.Upsert(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -35,9 +31,6 @@ func (uc *UseCase) UpsertVacancy(ctx context.Context, input entity.Vacancy) (*en
 }
 
 func (uc *UseCase) ReadVacancies(ctx context.Context, input entity.VacancyFilter) ([]entity.Vacancy, error) {
-	log.Println("vacancy usecase read started")
-	defer log.Println("vacancy usecase read done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -46,7 +39,6 @@ func (uc *UseCase) ReadVacancies(ctx context.Context, input entity.VacancyFilter
 
 	output, err := uc.repo.Read(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -54,20 +46,11 @@ func (uc *UseCase) ReadVacancies(ctx context.Context, input entity.VacancyFilter
 }
 
 func (uc *UseCase) DeleteVacancy(ctx context.Context, input entity.VacancyFilter) error {
-	log.Println("vacancy usecase delete started")
-	defer log.Println("vacancy usecase delete done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.Delete(ctx, input)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
+	return uc.repo.Delete(ctx, input)
 }

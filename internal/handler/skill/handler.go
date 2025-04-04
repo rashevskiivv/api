@@ -42,7 +42,6 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 
 	output, err = h.uc.UpsertSkill(ctx, input)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -75,7 +74,6 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 
 	skills, err = h.uc.ReadSkills(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -144,7 +142,6 @@ func (h *Handler) DeleteHandle(ctx *gin.Context) {
 
 	err = h.uc.DeleteSkill(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

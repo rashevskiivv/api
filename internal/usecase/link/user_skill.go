@@ -7,26 +7,16 @@ import (
 )
 
 func (uc *UseCase) UpsertUS(ctx context.Context, input entity.UserSkill) error {
-	log.Println("user-skill usecase upsert started")
-	defer log.Println("user-skill usecase upsert done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.UpsertUserSkill(ctx, input)
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return uc.repo.UpsertUserSkill(ctx, input)
 }
 
 func (uc *UseCase) ReadUS(ctx context.Context, input entity.UserSkillFilter) ([]entity.UserSkill, error) {
-	log.Println("user-skill usecase read started")
-	defer log.Println("user-skill usecase read done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -35,7 +25,6 @@ func (uc *UseCase) ReadUS(ctx context.Context, input entity.UserSkillFilter) ([]
 
 	output, err := uc.repo.ReadUserSkill(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -43,18 +32,11 @@ func (uc *UseCase) ReadUS(ctx context.Context, input entity.UserSkillFilter) ([]
 }
 
 func (uc *UseCase) DeleteUS(ctx context.Context, input entity.UserSkillFilter) error {
-	log.Println("user-skill usecase delete started")
-	defer log.Println("user-skill usecase delete done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.DeleteUserSkill(ctx, input)
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return uc.repo.DeleteUserSkill(ctx, input)
 }

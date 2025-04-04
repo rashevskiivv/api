@@ -40,7 +40,6 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 
 	output, err = h.uc.UpsertAnswer(ctx, input)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -73,7 +72,6 @@ func (h *Handler) ReadHandle(ctx *gin.Context) {
 
 	output, err = h.uc.ReadAnswers(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
@@ -165,7 +163,6 @@ func (h *Handler) DeleteHandle(ctx *gin.Context) {
 
 	err = h.uc.DeleteAnswer(ctx, filter)
 	if err != nil {
-		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

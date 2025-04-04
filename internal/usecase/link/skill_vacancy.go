@@ -7,26 +7,16 @@ import (
 )
 
 func (uc *UseCase) UpsertSV(ctx context.Context, input entity.SkillVacancy) error {
-	log.Println("skill-vacancy usecase upsert started")
-	defer log.Println("skill-vacancy usecase upsert done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.UpsertSkillVacancy(ctx, input)
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return uc.repo.UpsertSkillVacancy(ctx, input)
 }
 
 func (uc *UseCase) ReadSV(ctx context.Context, input entity.SkillVacancyFilter) ([]entity.SkillVacancy, error) {
-	log.Println("skill-vacancy usecase read started")
-	defer log.Println("skill-vacancy usecase read done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
@@ -35,7 +25,6 @@ func (uc *UseCase) ReadSV(ctx context.Context, input entity.SkillVacancyFilter) 
 
 	output, err := uc.repo.ReadSkillVacancy(ctx, input)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -43,18 +32,11 @@ func (uc *UseCase) ReadSV(ctx context.Context, input entity.SkillVacancyFilter) 
 }
 
 func (uc *UseCase) DeleteSV(ctx context.Context, input entity.SkillVacancyFilter) error {
-	log.Println("skill-vacancy usecase delete started")
-	defer log.Println("skill-vacancy usecase delete done")
-
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	err = uc.repo.DeleteSkillVacancy(ctx, input)
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return uc.repo.DeleteSkillVacancy(ctx, input)
 }
