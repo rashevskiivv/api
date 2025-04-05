@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"

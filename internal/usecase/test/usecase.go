@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"tax-api/internal/entity"
-	repositoryAnswer "tax-api/internal/repository/answer"
-	repositoryQuestion "tax-api/internal/repository/question"
-	repositoryTest "tax-api/internal/repository/test"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	repositoryAnswer "github.com/rashevskiivv/api/internal/repository/answer"
+	repositoryQuestion "github.com/rashevskiivv/api/internal/repository/question"
+	repositoryTest "github.com/rashevskiivv/api/internal/repository/test"
 )
 
 type UseCase struct {

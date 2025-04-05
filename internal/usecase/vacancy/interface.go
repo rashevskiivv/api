@@ -2,7 +2,8 @@ package vacancy
 
 import (
 	"context"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 )
 
 type UseCaseI interface {

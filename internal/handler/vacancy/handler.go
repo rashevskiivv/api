@@ -5,9 +5,10 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"tax-api/internal/entity"
-	usecaseVacancy "tax-api/internal/usecase/vacancy"
 	"time"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	usecaseVacancy "github.com/rashevskiivv/api/internal/usecase/vacancy"
 
 	"github.com/gin-gonic/gin"
 )

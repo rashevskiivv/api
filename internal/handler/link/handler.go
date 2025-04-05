@@ -1,7 +1,7 @@
 package link
 
 import (
-	usecaseLink "tax-api/internal/usecase/link"
+	usecaseLink "github.com/rashevskiivv/api/internal/usecase/link"
 )
 
 type Handler struct {

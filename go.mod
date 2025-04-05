@@ -1,4 +1,4 @@
-module tax-api
+module github.com/rashevskiivv/api
 
 go 1.24
 

@@ -2,7 +2,8 @@ package answer
 
 import (
 	"context"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 )
 
 type Repository interface {

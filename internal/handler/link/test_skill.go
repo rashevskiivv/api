@@ -3,7 +3,8 @@ package link
 import (
 	"log"
 	"net/http"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 
 	"github.com/gin-gonic/gin"
 )

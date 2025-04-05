@@ -5,7 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 
 	"github.com/gin-gonic/gin"
 )

@@ -3,7 +3,8 @@ package link
 import (
 	"context"
 	"log"
-	"tax-api/internal/entity"
+
+	"github.com/rashevskiivv/api/internal/entity"
 )
 
 func (uc *UseCase) UpsertSV(ctx context.Context, input entity.SkillVacancy) error {

@@ -3,8 +3,9 @@ package user
 import (
 	"context"
 	"log"
-	"tax-api/internal/entity"
-	repositoryUser "tax-api/internal/repository/user"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	repositoryUser "github.com/rashevskiivv/api/internal/repository/user"
 )
 
 type UseCase struct {

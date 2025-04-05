@@ -5,8 +5,9 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"tax-api/internal/entity"
-	usecaseTest "tax-api/internal/usecase/test"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	usecaseTest "github.com/rashevskiivv/api/internal/usecase/test"
 
 	"github.com/gin-gonic/gin"
 )

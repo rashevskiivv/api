@@ -3,8 +3,9 @@ package skill
 import (
 	"context"
 	"log"
-	"tax-api/internal/entity"
-	repositorySkill "tax-api/internal/repository/skill"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	repositorySkill "github.com/rashevskiivv/api/internal/repository/skill"
 )
 
 type UseCase struct {

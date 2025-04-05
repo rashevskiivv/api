@@ -2,8 +2,9 @@ package user
 
 import (
 	"context"
-	"tax-api/internal/entity"
-	"tax-api/internal/repository"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	"github.com/rashevskiivv/api/internal/repository"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -35,4 +36,4 @@ func (r *Repo) Delete(ctx context.Context, filter entity.UserFilter) error {
 	panic("")
 }
 
-// todo should I use repo or send requests to auth
+// todo should I use repo or send requests to auth - different db

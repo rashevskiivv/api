@@ -5,35 +5,35 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	repositoryUser "tax-api/internal/repository/user"
-	usecaseUser "tax-api/internal/usecase/user"
 
-	"tax-api/internal"
-	"tax-api/internal/handler"
+	repositoryUser "github.com/rashevskiivv/api/internal/repository/user"
+	usecaseUser "github.com/rashevskiivv/api/internal/usecase/user"
 
-	handlerAnswer "tax-api/internal/handler/answer"
-	handlerLink "tax-api/internal/handler/link"
-	handlerQuestion "tax-api/internal/handler/question"
-	handlerSkill "tax-api/internal/handler/skill"
-	handlerTest "tax-api/internal/handler/test"
-	handlerUser "tax-api/internal/handler/user"
-	handlerVacancy "tax-api/internal/handler/vacancy"
+	"github.com/rashevskiivv/api/internal"
+	"github.com/rashevskiivv/api/internal/handler"
+	handlerAnswer "github.com/rashevskiivv/api/internal/handler/answer"
+	handlerLink "github.com/rashevskiivv/api/internal/handler/link"
+	handlerQuestion "github.com/rashevskiivv/api/internal/handler/question"
+	handlerSkill "github.com/rashevskiivv/api/internal/handler/skill"
+	handlerTest "github.com/rashevskiivv/api/internal/handler/test"
+	handlerUser "github.com/rashevskiivv/api/internal/handler/user"
+	handlerVacancy "github.com/rashevskiivv/api/internal/handler/vacancy"
 
-	"tax-api/internal/repository"
+	"github.com/rashevskiivv/api/internal/repository"
 
-	repositoryAnswer "tax-api/internal/repository/answer"
-	repositoryLink "tax-api/internal/repository/link"
-	repositoryQuestion "tax-api/internal/repository/question"
-	repositorySkill "tax-api/internal/repository/skill"
-	repositoryTest "tax-api/internal/repository/test"
-	repositoryVacancy "tax-api/internal/repository/vacancy"
+	repositoryAnswer "github.com/rashevskiivv/api/internal/repository/answer"
+	repositoryLink "github.com/rashevskiivv/api/internal/repository/link"
+	repositoryQuestion "github.com/rashevskiivv/api/internal/repository/question"
+	repositorySkill "github.com/rashevskiivv/api/internal/repository/skill"
+	repositoryTest "github.com/rashevskiivv/api/internal/repository/test"
+	repositoryVacancy "github.com/rashevskiivv/api/internal/repository/vacancy"
 
-	usecaseAnswer "tax-api/internal/usecase/answer"
-	usecaseLink "tax-api/internal/usecase/link"
-	usecaseQuestion "tax-api/internal/usecase/question"
-	usecaseSkill "tax-api/internal/usecase/skill"
-	usecaseTest "tax-api/internal/usecase/test"
-	usecaseVacancy "tax-api/internal/usecase/vacancy"
+	usecaseAnswer "github.com/rashevskiivv/api/internal/usecase/answer"
+	usecaseLink "github.com/rashevskiivv/api/internal/usecase/link"
+	usecaseQuestion "github.com/rashevskiivv/api/internal/usecase/question"
+	usecaseSkill "github.com/rashevskiivv/api/internal/usecase/skill"
+	usecaseTest "github.com/rashevskiivv/api/internal/usecase/test"
+	usecaseVacancy "github.com/rashevskiivv/api/internal/usecase/vacancy"
 
 	"github.com/gin-gonic/gin"
 )
@@ -102,6 +102,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 	// Routing
+	router.Use(handler.TokenAuthMiddleware())
 	router.NoRoute(handler.NotFound)
 	router.GET("/_hc", handler.HealthCheck)
 

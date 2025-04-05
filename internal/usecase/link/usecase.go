@@ -1,7 +1,7 @@
 package link
 
 import (
-	repositoryLink "tax-api/internal/repository/link"
+	repositoryLink "github.com/rashevskiivv/api/internal/repository/link"
 )
 
 type UseCase struct {

@@ -3,8 +3,9 @@ package answer
 import (
 	"context"
 	"log"
-	"tax-api/internal/entity"
-	repositoryAnswer "tax-api/internal/repository/answer"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	repositoryAnswer "github.com/rashevskiivv/api/internal/repository/answer"
 )
 
 type UseCase struct {

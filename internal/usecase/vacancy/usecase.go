@@ -3,8 +3,9 @@ package vacancy
 import (
 	"context"
 	"log"
-	"tax-api/internal/entity"
-	repositoryVacancy "tax-api/internal/repository/vacancy"
+
+	"github.com/rashevskiivv/api/internal/entity"
+	repositoryVacancy "github.com/rashevskiivv/api/internal/repository/vacancy"
 )
 
 type UseCase struct {

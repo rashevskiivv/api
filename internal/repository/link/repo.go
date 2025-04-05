@@ -1,7 +1,7 @@
 package link
 
 import (
-	"tax-api/internal/repository"
+	"github.com/rashevskiivv/api/internal/repository"
 
 	"github.com/Masterminds/squirrel"
 )

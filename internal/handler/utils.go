@@ -2,9 +2,10 @@ package handler
 
 import (
 	"net/http"
-	"tax-api/internal/entity"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rashevskiivv/api/internal/entity"
 )
 
 const (
@@ -39,4 +40,25 @@ func HealthCheck(c *gin.Context) {
 		Message: "SERVING",
 	}
 	c.JSON(http.StatusOK, b)
+}
+
+func TokenAuthMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		client := http.Client{}
+		req := http.Request{Method: http.MethodGet, URL: &url.URL{Host: "localhost", Path: "check"}}
+		req.Header.Set("id", ctx.Request.Header.Get("id"))
+		req.Header.Set("token", ctx.Request.Header.Get("token"))
+
+		resp, err := client.Do(&req)
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		if resp.StatusCode != http.StatusOK {
+			ctx.AbortWithStatus(resp.StatusCode)
+			return
+		}
+
+		ctx.Next()
+	}
 }
