@@ -46,7 +46,7 @@ func HealthCheck(c *gin.Context) {
 func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		client := http.Client{} // todo Timeout: time.Second * 3
-		req, err := http.NewRequest(http.MethodGet, "http://auth-app/auth/check", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://auth-app:84/auth/check", nil)
 		req.Header.Add("id", ctx.Request.Header.Get("id"))
 		req.Header.Add("token", ctx.Request.Header.Get("token"))
 
