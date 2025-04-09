@@ -6,7 +6,7 @@ endif
 
 APP_IMAGE=api_local
 APP_TAG=latest
-DB_IMAGE=db
+DB_IMAGE=api_db
 DB_TAG=latest
 RELEASE_NAME=api
 DC_FILE=-f ${CUR_DIR}/deployment/docker-compose.yaml
