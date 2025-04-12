@@ -66,16 +66,7 @@ func (uc *UseCase) DeleteTest(ctx context.Context, input entity.TestFilter) erro
 }
 
 func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
-	/* todo implement me for what i require id_user? make another table with stats?
-	1.1 get request
-	1.2 parse body
-	1.3 call uc method
-	2.1 get test by id
-	2.2 get all questions by id_test and number of questions
-	2.3 get all answers for each question
-	2.4 put into 1 struct
-	1.4 return json
-	*/
+	/* todo what for i require id_user? make another table with stats? */
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)

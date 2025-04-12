@@ -109,8 +109,16 @@ func getFilter(ctx *gin.Context) (filter entity.TestFilter, err error) {
 			filter.Title = v
 		case "description":
 			filter.Description = v
-		case "average_passing_time":
-			filter.AveragePassingTime = v
+		case "duration":
+			vals := make([]int16, 0, len(v))
+			for _, s := range v {
+				val, err = strconv.ParseInt(s, 10, 16)
+				if err != nil {
+					return filter, err
+				}
+				vals = append(vals, int16(val))
+			}
+			filter.Duration = vals
 		case "id_skill":
 			vals := make([]int64, 0, len(v))
 			for _, s := range v {
@@ -187,6 +195,7 @@ func (h *Handler) StartHandle(ctx *gin.Context) {
 
 	output, err = h.uc.StartTest(ctx, input)
 	if err != nil {
+		log.Println(err)
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return

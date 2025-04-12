@@ -6,11 +6,11 @@ import (
 )
 
 type Test struct {
-	ID                 *int64  `json:"id"`
-	Title              string  `json:"title"`
-	Description        *string `json:"description"`
-	AveragePassingTime *string `json:"average_passing_time"` // todo duration as int minutes
-	IDSkill            *int64  `json:"id_skill"`
+	ID          *int64  `json:"id"`
+	Title       string  `json:"title"`
+	Description *string `json:"description"`
+	Duration    *int16  `json:"duration"`
+	IDSkill     *int64  `json:"id_skill"`
 }
 
 func (m *Test) Validate() error {
@@ -42,18 +42,9 @@ func (m *Test) Validate() error {
 		}
 	}
 
-	if m.AveragePassingTime != nil {
-		if len(*m.AveragePassingTime) == 0 {
-			return fmt.Errorf("average_passing_time can not be empty")
-		}
-		if strings.Contains(*m.AveragePassingTime, "--") {
-			return fmt.Errorf("average_passing_time contains \"--\". It is restricted")
-		}
-		if strings.Contains(strings.ToLower(*m.AveragePassingTime), "drop") {
-			return fmt.Errorf("average_passing_time contains \"drop\". It is restricted")
-		}
-		if strings.Contains(strings.ToLower(*m.AveragePassingTime), "delete") {
-			return fmt.Errorf("average_passing_time contains \"delete\". It is restricted")
+	if m.Duration != nil {
+		if *m.Duration == 0 {
+			return fmt.Errorf("duration must be greater than 0")
 		}
 	}
 

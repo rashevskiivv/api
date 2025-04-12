@@ -6,12 +6,12 @@ import (
 )
 
 type TestFilter struct {
-	ID                 []int64  `json:"id,omitempty"`
-	Title              []string `json:"title,omitempty"`
-	Description        []string `json:"description,omitempty"`
-	AveragePassingTime []string `json:"average_passing_time,omitempty"`
-	IDSkill            []int64  `json:"id_skill,omitempty"`
-	Limit              uint     `json:"limit,omitempty"`
+	ID          []int64  `json:"id,omitempty"`
+	Title       []string `json:"title,omitempty"`
+	Description []string `json:"description,omitempty"`
+	Duration    []int16  `json:"duration,omitempty"`
+	IDSkill     []int64  `json:"id_skill,omitempty"`
+	Limit       uint     `json:"limit,omitempty"`
 }
 
 func (f *TestFilter) Validate() error {
@@ -57,19 +57,10 @@ func (f *TestFilter) Validate() error {
 		}
 	}
 
-	if len(f.AveragePassingTime) > 0 {
-		for i, s := range f.AveragePassingTime {
-			if len(s) == 0 {
-				return fmt.Errorf("%v. average_passing_time can not be empty", i)
-			}
-			if strings.Contains(s, "--") {
-				return fmt.Errorf("%v. average_passing_time contains \"--\". It is restricted", i)
-			}
-			if strings.Contains(strings.ToLower(s), "drop") {
-				return fmt.Errorf("%v. average_passing_time contains \"drop\". It is restricted", i)
-			}
-			if strings.Contains(strings.ToLower(s), "delete") {
-				return fmt.Errorf("average_passing_time contains \"delete\". It is restricted")
+	if len(f.Duration) > 0 {
+		for i, s := range f.Duration {
+			if s == 0 {
+				return fmt.Errorf("%v. duration must be greater than 0", i)
 			}
 		}
 	}

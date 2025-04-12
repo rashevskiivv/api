@@ -29,19 +29,19 @@ func (r *Repo) Upsert(ctx context.Context, input entity.Test) (*entity.Test, err
 	defer log.Println("test upsert done")
 	var id int64
 
-	const q = `INSERT INTO test ("title", "description", "average_passing_time", "id_skill")
-VALUES (@title, @description, @average_passing_time, @id_skill)
+	const q = `INSERT INTO test ("title", "description", "duration", "id_skill")
+VALUES (@title, @description, @duration, @id_skill)
 ON CONFLICT ON CONSTRAINT test_ukey
-	DO UPDATE SET title       			= EXCLUDED.title,
-				  description			= EXCLUDED.description,
-				  average_passing_time	= EXCLUDED.average_passing_time,
-				  id_skill 				= EXCLUDED.id_skill
+	DO UPDATE SET title       	= EXCLUDED.title,
+				  description	= EXCLUDED.description,
+				  duration		= EXCLUDED.duration,
+				  id_skill 		= EXCLUDED.id_skill
 RETURNING id;`
 	args := pgx.NamedArgs{
-		"title":                input.Title,
-		"description":          input.Description,
-		"average_passing_time": input.AveragePassingTime,
-		"id_skill":             input.IDSkill,
+		"title":       input.Title,
+		"description": input.Description,
+		"duration":    input.Duration,
+		"id_skill":    input.IDSkill,
 	}
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)
@@ -62,7 +62,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 		"id",
 		"title",
 		"description",
-		"average_passing_time",
+		"duration",
 		"id_skill",
 	).From(entity.TableTest)
 
@@ -76,8 +76,8 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 	if len(filter.Description) > 0 {
 		q = q.Where(squirrel.Eq{"description": filter.Description})
 	}
-	if len(filter.AveragePassingTime) > 0 {
-		q = q.Where(squirrel.Eq{"average_passing_time": filter.AveragePassingTime})
+	if len(filter.Duration) > 0 {
+		q = q.Where(squirrel.Eq{"duration": filter.Duration})
 	}
 	if len(filter.IDSkill) > 0 {
 		q = q.Where(squirrel.Eq{"id_skill": filter.IDSkill})
@@ -107,7 +107,7 @@ func (r *Repo) Read(ctx context.Context, filter entity.TestFilter) ([]entity.Tes
 			&test.ID,
 			&test.Title,
 			&test.Description,
-			&test.AveragePassingTime,
+			&test.Duration,
 			&test.IDSkill,
 		)
 		if err != nil {
@@ -139,8 +139,8 @@ func (r *Repo) Delete(ctx context.Context, filter entity.TestFilter) error {
 	if len(filter.Description) > 0 {
 		q = q.Where(squirrel.Eq{"description": filter.Description})
 	}
-	if len(filter.AveragePassingTime) > 0 {
-		q = q.Where(squirrel.Eq{"average_passing_time": filter.AveragePassingTime})
+	if len(filter.Duration) > 0 {
+		q = q.Where(squirrel.Eq{"duration": filter.Duration})
 	}
 	if len(filter.IDSkill) > 0 {
 		q = q.Where(squirrel.Eq{"id_skill": filter.IDSkill})

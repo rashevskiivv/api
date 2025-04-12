@@ -185,7 +185,7 @@ CREATE TABLE public.test (
     id bigint NOT NULL,
     title text NOT NULL,
     description text,
-    average_passing_time text,
+    duration int,
     id_skill bigint
 );
 
@@ -394,7 +394,7 @@ COPY public.skill_vacancy (id_vacancy, id_skill) FROM stdin;
 -- Data for Name: test; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.test (id, title, description, average_passing_time, id_skill) FROM stdin;
+COPY public.test (id, title, description, duration, id_skill) FROM stdin;
 2	Тест на знание Linux	Linux - негласный стандарт для серверных ОС. Знания по работе с UNIX-подобными системами являются важными для любого специалиста в IT. 	\N	2
 1	Тест на знание git	Git - базовая VCS. Этот тест по проверке базовых знаний.	\N	1
 \.

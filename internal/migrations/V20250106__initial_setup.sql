@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS public.skill_vacancy
 
 CREATE TABLE IF NOT EXISTS public.test
 (
-    id                   bigserial NOT NULL,
-    title                text      NOT NULL,
-    description          text,
-    average_passing_time text,
-    id_skill             bigint,
+    id          bigserial NOT NULL,
+    title       text      NOT NULL,
+    description text,
+    duration    int,
+    id_skill    bigint,
     CONSTRAINT test_pkey PRIMARY KEY (id)
 );
 
