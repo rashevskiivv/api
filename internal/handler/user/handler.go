@@ -45,7 +45,7 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 
 	id := ctx.Request.Header.Get("id")
 	input.User.ID = &id
-	output, err = h.uc.UpsertUser(ctx, entity.UserAuthInput{User: input.User, Token: ctx.Request.Header.Get("token"), Filter: input.Filter})
+	output, err = h.uc.UpsertUser(entity.UserAuthInput{User: input.User, Token: ctx.Request.Header.Get("token"), Filter: input.Filter})
 	if err != nil {
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)

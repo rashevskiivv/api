@@ -26,7 +26,7 @@ func (uc *UseCase) CloseIdleConnections() {
 	uc.client.Client.CloseIdleConnections()
 }
 
-func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (*entity.User, error) {
+func (uc *UseCase) UpsertUser(input entity.UserAuthInput) (*entity.User, error) {
 	authAppURL, err := env.GetAuthAppURL()
 	if err != nil {
 		log.Println(err)
