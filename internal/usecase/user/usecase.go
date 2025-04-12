@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"math"
 	"net/http"
 
 	env "github.com/rashevskiivv/api/internal"
@@ -71,7 +72,8 @@ func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (
 		log.Println(err)
 		return nil, err
 	}
-	id := response.Data.(int64)
+	idf := response.Data.(float64)
+	id := int64(math.Round(idf))
 	output := entity.User{ID: &id}
 
 	return &output, nil
