@@ -6,24 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	env "github.com/rashevskiivv/api/internal"
+	"github.com/rashevskiivv/api/internal/client"
 	"github.com/rashevskiivv/api/internal/entity"
-)
-
-const (
-	AnswersPath   = "/answers"
-	LinksPath     = "/links"
-	QuestionsPath = "/questions"
-	SkillsPath    = "/skills"
-	TestsPath     = "/tests"
-	UsersPath     = "/users"
-	VacanciesPath = "/vacancies"
-
-	StartPath = "/start"
-	EndPath   = "/end"
-
-	TestSkillPath    = "/test_skill"
-	UserSkillPath    = "/user_skill"
-	SkillVacancyPath = "/skill_vacancy"
 )
 
 // NotFound Not found page handler.
@@ -45,12 +30,28 @@ func HealthCheck(c *gin.Context) {
 
 func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		client := http.Client{} // todo Timeout: time.Second * 3
-		req, err := http.NewRequest(http.MethodGet, "http://auth-app:80/check", nil)
-		req.Header.Add("id", ctx.Request.Header.Get("id"))
-		req.Header.Add("token", ctx.Request.Header.Get("token"))
+		cl := client.NewClient()
+		defer cl.Client.CloseIdleConnections()
 
-		resp, err := client.Do(req)
+		authAppURL, err := env.GetAuthAppURL()
+		if err != nil {
+			log.Println(err)
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
+			return
+		}
+		req := client.NewRequest(http.MethodGet, authAppURL+entity.PathCheck, nil)
+		if req == nil {
+			log.Println(entity.ErrorCreateRequest)
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, entity.ErrorCreateRequest)
+			return
+		}
+
+		headers := make(map[string]string, 2)
+		headers["id"] = ctx.Request.Header.Get("id")
+		headers["token"] = ctx.Request.Header.Get("token")
+		req.AddAuthHeaders(headers)
+
+		resp, err := cl.Do(req)
 		if err != nil {
 			log.Println(err)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
@@ -58,7 +59,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 		}
 
 		defer func(Body io.ReadCloser) {
-			err := Body.Close()
+			err = Body.Close()
 			if err != nil {
 				log.Println(err)
 			}

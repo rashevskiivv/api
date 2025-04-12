@@ -55,3 +55,9 @@ func (f *UserFilter) Validate() error {
 
 	return nil
 }
+
+type UserAuthInput struct {
+	User   UserAuth   `json:"user"`
+	Filter UserFilter `json:"filter"`
+	Token  string
+}

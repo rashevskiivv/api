@@ -6,10 +6,8 @@ import (
 	"log"
 	"strconv"
 
-	repositoryUser "github.com/rashevskiivv/api/internal/repository/user"
-	usecaseUser "github.com/rashevskiivv/api/internal/usecase/user"
-
 	"github.com/rashevskiivv/api/internal"
+	"github.com/rashevskiivv/api/internal/entity"
 	"github.com/rashevskiivv/api/internal/handler"
 	handlerAnswer "github.com/rashevskiivv/api/internal/handler/answer"
 	handlerLink "github.com/rashevskiivv/api/internal/handler/link"
@@ -33,6 +31,7 @@ import (
 	usecaseQuestion "github.com/rashevskiivv/api/internal/usecase/question"
 	usecaseSkill "github.com/rashevskiivv/api/internal/usecase/skill"
 	usecaseTest "github.com/rashevskiivv/api/internal/usecase/test"
+	usecaseUser "github.com/rashevskiivv/api/internal/usecase/user"
 	usecaseVacancy "github.com/rashevskiivv/api/internal/usecase/vacancy"
 
 	"github.com/gin-gonic/gin"
@@ -51,7 +50,8 @@ func main() {
 	}
 
 	// Routing
-	handlers := createHandlers(pg)
+	handlers, userUC := createHandlersAndUserUC(pg)
+	defer userUC.CloseIdleConnections()
 	router = registerHandlers(router, handlers)
 
 	appPort, err := env.GetAppPortEnv()
@@ -66,14 +66,13 @@ func main() {
 	}
 }
 
-func createHandlers(pg *repository.Postgres) []interface{} {
+func createHandlersAndUserUC(pg *repository.Postgres) ([]interface{}, usecaseUser.UseCaseI) {
 	// Repo
 	answerRepo := repositoryAnswer.NewRepo(pg)
 	linkRepo := repositoryLink.NewRepo(pg)
 	questionRepo := repositoryQuestion.NewRepo(pg)
 	skillRepo := repositorySkill.NewRepo(pg)
 	testRepo := repositoryTest.NewRepo(pg)
-	userRepo := repositoryUser.NewRepo(pg)
 	vacancyRepo := repositoryVacancy.NewRepo(pg)
 	log.Println("repositories created")
 
@@ -83,7 +82,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 	questionUC := usecaseQuestion.NewUseCase(questionRepo)
 	skillUC := usecaseSkill.NewUseCase(skillRepo)
 	testUC := usecaseTest.NewUseCase(testRepo, questionRepo, answerRepo)
-	userUC := usecaseUser.NewUseCase(userRepo)
+	userUC := usecaseUser.NewUseCase()
 	vacancyUC := usecaseVacancy.NewUseCase(vacancyRepo)
 	log.Println("use cases created")
 
@@ -97,7 +96,7 @@ func createHandlers(pg *repository.Postgres) []interface{} {
 	vacancyHandler := handlerVacancy.NewHandler(vacancyUC)
 	log.Println("handlers created")
 
-	return []interface{}{testHandler, linkHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}
+	return []interface{}{testHandler, linkHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}, userUC
 }
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
@@ -109,48 +108,48 @@ func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 	for _, handlerI := range handlers {
 		switch h := handlerI.(type) {
 		case *handlerAnswer.Handler:
-			router.POST(handler.AnswersPath, h.UpsertHandle)
-			router.GET(handler.AnswersPath, h.ReadHandle)
-			router.DELETE(handler.AnswersPath, h.DeleteHandle)
+			router.POST(entity.PathAnswers, h.UpsertHandle)
+			router.GET(entity.PathAnswers, h.ReadHandle)
+			router.DELETE(entity.PathAnswers, h.DeleteHandle)
 			log.Println("answers handler registered")
 		case *handlerLink.Handler:
-			router.POST(handler.LinksPath+handler.TestSkillPath, h.UpsertTSHandle)
-			router.DELETE(handler.LinksPath+handler.TestSkillPath, h.DeleteTSHandle)
+			router.POST(entity.PathLinks+entity.PathTestSkill, h.UpsertTSHandle)
+			router.DELETE(entity.PathLinks+entity.PathTestSkill, h.DeleteTSHandle)
 
-			router.POST(handler.LinksPath+handler.UserSkillPath, h.UpsertUSHandle)
-			router.GET(handler.LinksPath+handler.UserSkillPath, h.ReadUSHandle)
-			router.DELETE(handler.LinksPath+handler.UserSkillPath, h.DeleteUSHandle)
+			router.POST(entity.PathLinks+entity.PathUserSkill, h.UpsertUSHandle)
+			router.GET(entity.PathLinks+entity.PathUserSkill, h.ReadUSHandle)
+			router.DELETE(entity.PathLinks+entity.PathUserSkill, h.DeleteUSHandle)
 
-			router.POST(handler.LinksPath+handler.SkillVacancyPath, h.UpsertSVHandle)
-			router.GET(handler.LinksPath+handler.SkillVacancyPath, h.ReadSVHandle)
-			router.DELETE(handler.LinksPath+handler.SkillVacancyPath, h.DeleteSVHandle)
+			router.POST(entity.PathLinks+entity.PathSkillVacancy, h.UpsertSVHandle)
+			router.GET(entity.PathLinks+entity.PathSkillVacancy, h.ReadSVHandle)
+			router.DELETE(entity.PathLinks+entity.PathSkillVacancy, h.DeleteSVHandle)
 			log.Println("links handler registered")
 		case *handlerQuestion.Handler:
-			router.POST(handler.QuestionsPath, h.UpsertHandle)
-			router.GET(handler.QuestionsPath, h.ReadHandle)
-			router.DELETE(handler.QuestionsPath, h.DeleteHandle)
+			router.POST(entity.PathQuestions, h.UpsertHandle)
+			router.GET(entity.PathQuestions, h.ReadHandle)
+			router.DELETE(entity.PathQuestions, h.DeleteHandle)
 			log.Println("questions handler registered")
 		case *handlerSkill.Handler:
-			router.POST(handler.SkillsPath, h.UpsertHandle)
-			router.GET(handler.SkillsPath, h.ReadHandle)
-			router.DELETE(handler.SkillsPath, h.DeleteHandle)
+			router.POST(entity.PathSkills, h.UpsertHandle)
+			router.GET(entity.PathSkills, h.ReadHandle)
+			router.DELETE(entity.PathSkills, h.DeleteHandle)
 			log.Println("skills handler registered")
 		case *handlerTest.Handler:
-			router.POST(handler.TestsPath, h.UpsertHandle)
-			router.GET(handler.TestsPath, h.ReadHandle)
-			router.DELETE(handler.TestsPath, h.DeleteHandle)
-			router.POST(handler.TestsPath+handler.StartPath, h.StartHandle)
-			router.POST(handler.TestsPath+handler.EndPath, h.EndHandle)
+			router.POST(entity.PathTests, h.UpsertHandle)
+			router.GET(entity.PathTests, h.ReadHandle)
+			router.DELETE(entity.PathTests, h.DeleteHandle)
+			router.POST(entity.PathTests+entity.PathStartTest, h.StartHandle)
+			router.POST(entity.PathTests+entity.PathEndTest, h.EndHandle)
 			log.Println("tests handler registered")
 		case *handlerUser.Handler:
-			router.POST(handler.UsersPath, h.UpsertHandle)
-			router.GET(handler.UsersPath, h.ReadHandle)
-			router.DELETE(handler.UsersPath, h.DeleteHandle)
+			router.POST(entity.PathUsers, h.UpsertHandle)
+			router.GET(entity.PathUsers, h.ReadHandle)
+			router.DELETE(entity.PathUsers, h.DeleteHandle)
 			log.Println("users handler registered")
 		case *handlerVacancy.Handler:
-			router.POST(handler.VacanciesPath, h.UpsertHandle)
-			router.GET(handler.VacanciesPath, h.ReadHandle)
-			router.DELETE(handler.VacanciesPath, h.DeleteHandle)
+			router.POST(entity.PathVacancies, h.UpsertHandle)
+			router.GET(entity.PathVacancies, h.ReadHandle)
+			router.DELETE(entity.PathVacancies, h.DeleteHandle)
 			log.Println("vacancies handler registered")
 		}
 	}

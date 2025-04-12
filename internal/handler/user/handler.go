@@ -26,7 +26,7 @@ func NewHandler(uc usecaseUser.UseCaseI) *Handler {
 
 func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	var (
-		input    entity.User
+		input    entity.UserAuthInput
 		output   *entity.User
 		response entity.Response
 		err      error
@@ -36,9 +36,6 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	defer log.Println("Upsert user handle finished")
 
 	err = ctx.ShouldBind(&input)
-	if errors.Is(err, io.EOF) {
-		err = nil
-	}
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
@@ -46,7 +43,9 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 		return
 	}
 
-	output, err = h.uc.UpsertUser(ctx, input)
+	id := ctx.Request.Header.Get("id")
+	input.User.ID = &id
+	output, err = h.uc.UpsertUser(ctx, entity.UserAuthInput{User: input.User, Token: ctx.Request.Header.Get("token"), Filter: input.Filter})
 	if err != nil {
 		response.Errors = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
