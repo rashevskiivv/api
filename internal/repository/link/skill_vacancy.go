@@ -15,7 +15,10 @@ func (r *Repo) UpsertSkillVacancy(ctx context.Context, input entity.SkillVacancy
 	log.Println("skill-vacancy upsert started")
 	defer log.Println("skill-vacancy upsert done")
 
-	const q = `INSERT INTO skill_vacancy ("id_vacancy", "id_skill") VALUES (@id_vacancy, @id_skill);`
+	const q = `INSERT INTO skill_vacancy ("id_vacancy", "id_skill") 
+VALUES (@id_vacancy, @id_skill)
+ON CONFLICT ON CONSTRAINT skill_vacancy_pkey
+	DO NOTHING;`
 
 	args := pgx.NamedArgs{
 		"id_vacancy": input.V.ID,
@@ -63,11 +66,11 @@ func (r *Repo) ReadSkillVacancy(ctx context.Context, input entity.SkillVacancyFi
 	}
 
 	rows, err := r.DB.Query(ctx, sql, args...)
-	defer rows.Close()
 	if err != nil {
 		log.Printf("unable to query skill-vacancy: %v\n", err)
 		return nil, fmt.Errorf("unable to query skill-vacancy: %v", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		skillVacancy := entity.SkillVacancy{}

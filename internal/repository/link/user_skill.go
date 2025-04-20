@@ -16,7 +16,9 @@ func (r *Repo) UpsertUserSkill(ctx context.Context, input entity.UserSkill) erro
 	defer log.Println("user-skill upsert done")
 
 	const q = `INSERT INTO user_skill ("id_user", "id_skill", "proficiency_level") 
-VALUES (@id_user, @id_skill, @proficiency_level);`
+VALUES (@id_user, @id_skill, @proficiency_level)
+ON CONFLICT ON CONSTRAINT user_skill_pkey
+	DO UPDATE SET proficiency_level	= EXCLUDED.proficiency_level;`
 
 	args := pgx.NamedArgs{
 		"id_user":           input.U.ID,
@@ -46,10 +48,10 @@ func (r *Repo) ReadUserSkill(ctx context.Context, input entity.UserSkillFilter) 
 
 	// Where
 	if len(input.SF.ID) > 0 {
-		q = q.Where(squirrel.Eq{"id_user": input.SF.ID})
+		q = q.Where(squirrel.Eq{"id_skill": input.SF.ID})
 	}
 	if len(input.UF.ID) > 0 {
-		q = q.Where(squirrel.Eq{"id_skill": input.UF.ID})
+		q = q.Where(squirrel.Eq{"id_user": input.UF.ID})
 	}
 	if len(input.ProficiencyLevel) > 0 {
 		q = q.Where(squirrel.Eq{"proficiency_level": input.ProficiencyLevel})
@@ -67,11 +69,11 @@ func (r *Repo) ReadUserSkill(ctx context.Context, input entity.UserSkillFilter) 
 	}
 
 	rows, err := r.DB.Query(ctx, sql, args...)
-	defer rows.Close()
 	if err != nil {
 		log.Printf("unable to query user-skill: %v\n", err)
 		return nil, fmt.Errorf("unable to query user-skill: %v", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		userSkill := entity.UserSkill{}

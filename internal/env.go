@@ -29,11 +29,11 @@ func init() {
 }
 
 func GetAuthAppURL() (string, error) {
-	authEnv := os.Getenv(envAuthAppURL)
-	if authEnv == "" {
+	url := os.Getenv(envAuthAppURL)
+	if url == "" {
 		return "", fmt.Errorf("can not found: %v", envAuthAppURL)
 	}
-	return authEnv, nil
+	return url, nil
 }
 
 func GetAppPortEnv() (int, error) {

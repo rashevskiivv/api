@@ -61,3 +61,14 @@ func (f *SkillVacancy) Validate() error {
 	}
 	return f.S.Validate()
 }
+
+type TestUser struct {
+	U                 User `json:"user"`
+	T                 Test `json:"test"`
+	Score             uint `json:"score"`
+	NumberOfQuestions uint `json:"number_of_questions"`
+}
+
+func (f *TestUser) Validate() error {
+	return f.T.Validate()
+}

@@ -4,12 +4,13 @@ const (
 	TableQuestion = "question"
 	TableTest     = "test"
 	TableAnswer   = "answer"
-	TableUser     = "user"
+	TableUser     = "public.\"user\""
 	TableVacancy  = "vacancy"
 	TableSkill    = "skill"
 
 	TableSkillVacancy = "skill_vacancy"
 	TableUserSkill    = "user_skill"
+	TableTestUser     = "test_user"
 
 	PathAnswers   = "/answers"
 	PathLinks     = "/links"
@@ -27,4 +28,10 @@ const (
 	PathSkillVacancy = "/skill_vacancy"
 
 	PathCheck = "/check"
+
+	// Apps Origin header values
+
+	AppAPI             = "api"
+	AppRecommendations = "recommendations"
+	AppAuth            = "auth"
 )

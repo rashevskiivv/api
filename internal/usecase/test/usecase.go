@@ -66,7 +66,6 @@ func (uc *UseCase) DeleteTest(ctx context.Context, input entity.TestFilter) erro
 }
 
 func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (*entity.StartTestOutput, error) {
-	/* todo what for i require id_user? make another table with stats? */
 	err := input.Validate()
 	if err != nil {
 		log.Println(err)

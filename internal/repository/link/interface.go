@@ -17,4 +17,8 @@ type Repository interface {
 	UpsertSkillVacancy(ctx context.Context, input entity.SkillVacancy) error
 	ReadSkillVacancy(ctx context.Context, input entity.SkillVacancyFilter) ([]entity.SkillVacancy, error)
 	DeleteSkillVacancy(ctx context.Context, input entity.SkillVacancyFilter) error
+
+	UpsertTestUser(ctx context.Context, input entity.TestUser) error
+	ReadTestUser(ctx context.Context, input entity.TestUserFilter) ([]entity.TestUser, error)
+	DeleteTestUser(ctx context.Context, input entity.TestUserFilter) error
 }

@@ -1,7 +1,5 @@
 package entity
 
-import "fmt"
-
 type AnswerQuestionFilter struct {
 	AF    AnswerFilter
 	QF    QuestionFilter
@@ -17,10 +15,6 @@ func (f *AnswerQuestionFilter) Validate() error {
 	err = f.QF.Validate()
 	if err != nil {
 		return err
-	}
-
-	if f.Limit < 0 {
-		return fmt.Errorf("limit can not be negative")
 	}
 
 	return nil
@@ -43,10 +37,6 @@ func (f *TestQuestionFilter) Validate() error {
 		return err
 	}
 
-	if f.Limit < 0 {
-		return fmt.Errorf("limit can not be negative")
-	}
-
 	return nil
 }
 
@@ -65,10 +55,6 @@ func (f *TestSkillFilter) Validate() error {
 	err = f.SF.Validate()
 	if err != nil {
 		return err
-	}
-
-	if f.Limit < 0 {
-		return fmt.Errorf("limit can not be negative")
 	}
 
 	return nil
@@ -92,10 +78,6 @@ func (f *UserSkillFilter) Validate() error {
 		return err
 	}
 
-	if f.Limit < 0 {
-		return fmt.Errorf("limit can not be negative")
-	}
-
 	return nil
 }
 
@@ -116,8 +98,26 @@ func (f *SkillVacancyFilter) Validate() error {
 		return err
 	}
 
-	if f.Limit < 0 {
-		return fmt.Errorf("limit can not be negative")
+	return nil
+}
+
+type TestUserFilter struct {
+	UF                UserFilter
+	TF                TestFilter
+	Score             []uint `json:"score,omitempty"`
+	NumberOfQuestions []uint `json:"number_of_questions,omitempty"`
+	Limit             uint   `json:"limit,omitempty"`
+}
+
+func (f *TestUserFilter) Validate() error {
+	err := f.UF.Validate()
+	if err != nil {
+		return err
+	}
+
+	err = f.TF.Validate()
+	if err != nil {
+		return err
 	}
 
 	return nil
