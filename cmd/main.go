@@ -16,6 +16,7 @@ import (
 	handlerTest "github.com/rashevskiivv/api/internal/handler/test"
 	handlerUser "github.com/rashevskiivv/api/internal/handler/user"
 	handlerVacancy "github.com/rashevskiivv/api/internal/handler/vacancy"
+	repositoryUser "github.com/rashevskiivv/api/internal/repository/user"
 
 	"github.com/rashevskiivv/api/internal/repository"
 
@@ -50,8 +51,9 @@ func main() {
 	}
 
 	// Routing
-	handlers, userUC := createHandlersAndUserUC(pg)
+	handlers, userUC, vacancyUC := createHandlersAndUCWithClient(pg)
 	defer userUC.CloseIdleConnections()
+	defer vacancyUC.CloseIdleConnections()
 	router = registerHandlers(router, handlers)
 
 	appPort, err := env.GetAppPortEnv()
@@ -66,13 +68,14 @@ func main() {
 	}
 }
 
-func createHandlersAndUserUC(pg *repository.Postgres) ([]interface{}, usecaseUser.UseCaseI) {
+func createHandlersAndUCWithClient(pg *repository.Postgres) ([]interface{}, usecaseUser.UseCaseI, usecaseVacancy.UseCaseI) {
 	// Repo
 	answerRepo := repositoryAnswer.NewRepo(pg)
 	linkRepo := repositoryLink.NewRepo(pg)
 	questionRepo := repositoryQuestion.NewRepo(pg)
 	skillRepo := repositorySkill.NewRepo(pg)
 	testRepo := repositoryTest.NewRepo(pg)
+	userRepo := repositoryUser.NewRepo(pg)
 	vacancyRepo := repositoryVacancy.NewRepo(pg)
 	log.Println("repositories created")
 
@@ -81,8 +84,8 @@ func createHandlersAndUserUC(pg *repository.Postgres) ([]interface{}, usecaseUse
 	linkUC := usecaseLink.NewUseCase(linkRepo)
 	questionUC := usecaseQuestion.NewUseCase(questionRepo)
 	skillUC := usecaseSkill.NewUseCase(skillRepo)
-	testUC := usecaseTest.NewUseCase(testRepo, questionRepo, answerRepo)
-	userUC := usecaseUser.NewUseCase()
+	testUC := usecaseTest.NewUseCase(testRepo, questionRepo, answerRepo, linkRepo)
+	userUC := usecaseUser.NewUseCase(userRepo)
 	vacancyUC := usecaseVacancy.NewUseCase(vacancyRepo)
 	log.Println("use cases created")
 
@@ -96,7 +99,7 @@ func createHandlersAndUserUC(pg *repository.Postgres) ([]interface{}, usecaseUse
 	vacancyHandler := handlerVacancy.NewHandler(vacancyUC)
 	log.Println("handlers created")
 
-	return []interface{}{testHandler, linkHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}, userUC
+	return []interface{}{testHandler, linkHandler, questionHandler, answerHandler, vacancyHandler, userHandler, skillHandler}, userUC, vacancyUC
 }
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {

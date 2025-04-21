@@ -40,7 +40,7 @@ RETURNING id;`
 	args := pgx.NamedArgs{
 		"name":      input.Name,
 		"email":     input.Email,
-		"interests": input.Interests, // todo use interests
+		"interests": input.Interests,
 	}
 
 	err := r.DB.QueryRow(ctx, q, args).Scan(&id)

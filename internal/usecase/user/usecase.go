@@ -30,31 +30,24 @@ func (uc *UseCase) CloseIdleConnections() {
 }
 
 func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (*entity.User, error) {
-	var output entity.User
+	var (
+		req    *client.Request
+		resp   *http.Response
+		body   []byte
+		output entity.User
+	)
+	err := input.Validate()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
 	if input.WhichRequest != entity.AppAuth {
-		authAppURL, err := env.GetAuthAppURL()
+		req, err = buildReq(input)
 		if err != nil {
-			log.Println(err)
 			return nil, err
 		}
-		out, err := json.Marshal(input.User)
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-		req := client.NewRequest(http.MethodPost, authAppURL+entity.PathUsers, bytes.NewBuffer(out))
-		if req == nil {
-			log.Println(err)
-			return nil, err
-		}
-
-		headers := make(map[string]string, 3)
-		headers["id"] = *input.User.ID
-		headers["token"] = input.Token
-		headers["Origin"] = entity.AppAPI
-		req.AddAuthHeaders(headers)
-
-		resp, err := uc.client.Do(req)
+		resp, err = uc.client.Do(req)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -66,7 +59,7 @@ func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (
 			}
 		}(resp.Body)
 
-		body, err := io.ReadAll(resp.Body)
+		body, err = io.ReadAll(resp.Body)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -99,6 +92,32 @@ func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (
 	return &output, nil
 }
 
+func buildReq(input entity.UserAuthInput) (*client.Request, error) {
+	appURL, err := env.GetAuthAppURL()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	out, err := json.Marshal(input.User)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	req := client.NewRequest(http.MethodPost, appURL+entity.PathUsers, bytes.NewBuffer(out))
+	if req == nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	headers := make(map[string]string, 3)
+	headers["id"] = input.ID
+	headers["token"] = input.Token
+	headers["Origin"] = entity.AppAPI
+	req.AddAuthHeaders(headers)
+
+	return req, nil
+}
+
 func (uc *UseCase) ReadUsers(ctx context.Context, input entity.UserFilter) ([]entity.User, error) {
 	err := input.Validate()
 	if err != nil {
@@ -106,12 +125,12 @@ func (uc *UseCase) ReadUsers(ctx context.Context, input entity.UserFilter) ([]en
 		return nil, err
 	}
 
-	//output, err := uc.client.Read(ctx, input)
-	//if err != nil {
-	return nil, err
-	//}
+	output, err := uc.repo.Read(ctx, input)
+	if err != nil {
+		return nil, err
+	}
 
-	//return output, nil
+	return output, nil
 }
 
 func (uc *UseCase) DeleteUser(ctx context.Context, input entity.UserFilter) error {
@@ -120,7 +139,6 @@ func (uc *UseCase) DeleteUser(ctx context.Context, input entity.UserFilter) erro
 		log.Println(err)
 		return err
 	}
-	return err
 
-	//return uc.client.Delete(ctx, input)
+	return uc.repo.Delete(ctx, input)
 }

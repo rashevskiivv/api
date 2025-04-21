@@ -25,7 +25,7 @@ func NewHandler(uc usecaseVacancy.UseCaseI) *Handler {
 
 func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	var (
-		input    entity.Vacancy
+		input    entity.VacancyInput
 		output   *entity.Vacancy
 		response entity.Response
 		err      error
@@ -42,6 +42,12 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 		return
 	}
 
+	id := ctx.Request.Header.Get("id")
+	appSource := ctx.Request.Header.Get("Origin")
+	token := ctx.Request.Header.Get("token")
+	input.ID = id
+	input.WhichRequest = appSource
+	input.Token = token
 	output, err = h.uc.UpsertVacancy(ctx, input)
 	if err != nil {
 		response.Errors = err.Error()

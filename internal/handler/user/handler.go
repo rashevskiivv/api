@@ -46,7 +46,7 @@ func (h *Handler) UpsertHandle(ctx *gin.Context) {
 	id := ctx.Request.Header.Get("id")
 	appSource := ctx.Request.Header.Get("Origin")
 	token := ctx.Request.Header.Get("token")
-	input.User.ID = &id
+	input.ID = id
 	input.WhichRequest = appSource
 	input.Token = token
 	output, err = h.uc.UpsertUser(ctx, input)

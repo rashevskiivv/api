@@ -17,7 +17,9 @@ const (
 	envPostgresHost     = "POSTGRES_HOST"
 	envPostgresPort     = "POSTGRES_PORT"
 	envPostgresDB       = "POSTGRES_DB"
-	envAuthAppURL       = "AUTH_APP_URL"
+
+	envAuthAppURL            = "AUTH_APP_URL"
+	envRecommendationsAppURL = "RECOMMENDATION_APP_URL"
 )
 
 func init() {
@@ -32,6 +34,14 @@ func GetAuthAppURL() (string, error) {
 	url := os.Getenv(envAuthAppURL)
 	if url == "" {
 		return "", fmt.Errorf("can not found: %v", envAuthAppURL)
+	}
+	return url, nil
+}
+
+func GetRecommendationsAppURL() (string, error) {
+	url := os.Getenv(envRecommendationsAppURL)
+	if url == "" {
+		return "", fmt.Errorf("can not found: %v", envRecommendationsAppURL)
 	}
 	return url, nil
 }

@@ -6,10 +6,11 @@ import (
 )
 
 type UserFilter struct {
-	ID    []int64  `json:"id,omitempty"`
-	Name  []string `json:"name,omitempty"`
-	Email []string `json:"email,omitempty"`
-	Limit uint     `json:"limit,omitempty"`
+	ID        []int64  `json:"id,omitempty"`
+	Name      []string `json:"name,omitempty"`
+	Email     []string `json:"email,omitempty"`
+	Interests []string `json:"interests,omitempty"`
+	Limit     uint     `json:"limit,omitempty"`
 }
 
 func (f *UserFilter) Validate() error {
@@ -32,6 +33,9 @@ func (f *UserFilter) Validate() error {
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. name contains \"drop\". It is restricted", i)
 			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("%v. name contains \"delete\". It is restricted", i)
+			}
 		}
 	}
 
@@ -46,6 +50,26 @@ func (f *UserFilter) Validate() error {
 			if strings.Contains(strings.ToLower(s), "drop") {
 				return fmt.Errorf("%v. email contains \"drop\". It is restricted", i)
 			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("%v. email contains \"delete\". It is restricted", i)
+			}
+		}
+	}
+
+	if len(f.Interests) > 0 {
+		for i, s := range f.Interests {
+			if len(s) == 0 {
+				return fmt.Errorf("%v. interests can not be empty", i)
+			}
+			if strings.Contains(s, "--") {
+				return fmt.Errorf("%v. interests contains \"--\". It is restricted", i)
+			}
+			if strings.Contains(strings.ToLower(s), "drop") {
+				return fmt.Errorf("%v. interests contains \"drop\". It is restricted", i)
+			}
+			if strings.Contains(strings.ToLower(s), "delete") {
+				return fmt.Errorf("%v. interests contains \"delete\". It is restricted", i)
+			}
 		}
 	}
 
@@ -57,8 +81,7 @@ func (f *UserFilter) Validate() error {
 }
 
 type UserAuthInput struct {
-	User         UserAuth   `json:"user"`
-	Filter       UserFilter `json:"filter"`
-	Token        string
-	WhichRequest string
+	User   UserAuth   `json:"user"`
+	Filter UserFilter `json:"filter"`
+	RequestUtils
 }

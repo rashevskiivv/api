@@ -7,6 +7,7 @@ import (
 
 	"github.com/rashevskiivv/api/internal/entity"
 	repositoryAnswer "github.com/rashevskiivv/api/internal/repository/answer"
+	repositoryLink "github.com/rashevskiivv/api/internal/repository/link"
 	repositoryQuestion "github.com/rashevskiivv/api/internal/repository/question"
 	repositoryTest "github.com/rashevskiivv/api/internal/repository/test"
 )
@@ -15,13 +16,18 @@ type UseCase struct {
 	repo          repositoryTest.Repository
 	repoQuestions repositoryQuestion.Repository
 	repoAnswers   repositoryAnswer.Repository
+	repoLink      repositoryLink.Repository
 }
 
-func NewUseCase(repo repositoryTest.Repository, repoQuestions repositoryQuestion.Repository, repoAnswers repositoryAnswer.Repository) *UseCase {
+func NewUseCase(repo repositoryTest.Repository,
+	repoQuestions repositoryQuestion.Repository,
+	repoAnswers repositoryAnswer.Repository,
+	repoLink repositoryLink.Repository) *UseCase {
 	return &UseCase{
 		repo:          repo,
 		repoQuestions: repoQuestions,
 		repoAnswers:   repoAnswers,
+		repoLink:      repoLink,
 	}
 }
 
@@ -126,6 +132,17 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 		questionsToReturn = append(questionsToReturn, questionToReturn)
 	}
 
+	upsertInput := entity.TestUser{
+		U:                 entity.User{ID: &input.IDUser},
+		T:                 entity.Test{ID: &input.IDTest},
+		Score:             0,
+		NumberOfQuestions: uint(len(questionsToReturn)),
+	}
+	err = uc.repoLink.UpsertTestUser(ctx, upsertInput)
+	if err != nil {
+		return nil, err
+	}
+
 	testToReturn := entity.StartTestOutput{
 		NumberOfQuestions: int8(len(questionsToReturn)),
 		Questions:         questionsToReturn,
@@ -134,6 +151,6 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 }
 
 func (uc *UseCase) EndTest(ctx context.Context, filter entity.EndTestInput) error {
-	// todo implement me
+	// todo update here record at test_user
 	panic("implement me")
 }

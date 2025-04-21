@@ -81,3 +81,9 @@ func (f *VacancyFilter) Validate() error {
 
 	return nil
 }
+
+type VacancyInput struct {
+	Vacancy Vacancy
+	Filter  VacancyFilter
+	RequestUtils
+}
