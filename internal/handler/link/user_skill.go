@@ -69,7 +69,7 @@ func (h *Handler) ReadUSHandle(ctx *gin.Context) {
 	if len(output) == 0 {
 		log.Println("Data not found")
 		response.Errors = "Data not found"
-		ctx.AbortWithStatusJSON(http.StatusNotFound, response)
+		ctx.AbortWithStatusJSON(http.StatusNoContent, response)
 		return
 	}
 

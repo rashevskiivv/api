@@ -7,7 +7,8 @@ import (
 )
 
 type Repository interface {
-	Upsert(ctx context.Context, input entity.User) (*entity.User, error)
+	Insert(ctx context.Context, input entity.User) (*entity.User, error)
+	Update(ctx context.Context, input entity.UserAuthInput) (*entity.User, error)
 	Read(ctx context.Context, filter entity.UserFilter) ([]entity.User, error)
 	Delete(ctx context.Context, filter entity.UserFilter) error
 }

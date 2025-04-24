@@ -5,7 +5,7 @@ create table test_user
             references test,
     id_user             bigserial
         constraint test_user_user_id_fk
-            references public.user (id),
+            references public."user" (id),
     score               int     not null,
     number_of_questions integer not null,
     constraint test_user_pkey

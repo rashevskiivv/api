@@ -1,0 +1,388 @@
+{
+	"info": {
+		"_postman_id": "198886af-9241-4e54-afb2-b093dfbeeea1",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18064498"
+	},
+	"item": [
+		{
+			"name": "READY HealthCheck",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ0ODA3NjksInN1YiI6InNsYXZhNEBtYWlsLnJ1In0.tuj8UpKl-2V6hiDUU4Js3eBHwQBqNi4ZZUwK4ICKzvI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "// {\r\n//     \"data\": null,\r\n//     \"message\": \"SERVING\",\r\n//     \"errors\": \"\"\r\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/_hc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"_hc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY Tests",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMzk4OTUsInN1YiI6InNsYXZhNEBtYWlsLnJ1In0.N-Gi8APU62XmbZmbnYdAnibYREOsSmG8Jya51rtqiu4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/tests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"tests"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "title",
+							"value": "Тест на знание Linux",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "duration",
+							"value": "",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "id_skill",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY Answers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMzMxNTIsInN1YiI6InNsYXZhNEBtYWlsLnJ1In0.u88jgcMARcDysXJ4efALg_Unxop8951v9zNaLoR0knU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "// {\r\n//     \"data\": [\r\n//         {\r\n//             \"id\": 1,\r\n//             \"title\": \"Тест на знание Linux\",\r\n//             \"description\": \"Linux - негласный стандарт для серверных ОС. Знания по работе с UNIX-подобными системами являются важными для любого специалиста в IT.\",\r\n//             \"average_passing_time\": null,\r\n//             \"id_skill\": 2\r\n//         },\r\n//         {\r\n//             \"id\": 2,\r\n//             \"title\": \"Тест на знание git\",\r\n//             \"description\": \"Git - базовая VCS. Этот тест по проверке базовых знаний.\",\r\n//             \"average_passing_time\": null,\r\n//             \"id_skill\": 1\r\n//         },\r\n//         {\r\n//             \"id\": 3,\r\n//             \"title\": \"Тест\",\r\n//             \"description\": \"not empty\",\r\n//             \"average_passing_time\": \"60 minutes\",\r\n//             \"id_skill\": 1\r\n//         }\r\n//     ],\r\n//     \"message\": \"\",\r\n//     \"errors\": \"\"\r\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/answers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"answers"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "title",
+							"value": "Тест на знание Linux",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "average_passing_time",
+							"value": "",
+							"description": "Полное совпадение",
+							"disabled": true
+						},
+						{
+							"key": "id_skill",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY Tests",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "id",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ0ODA3NjksInN1YiI6InNsYXZhNEBtYWlsLnJ1In0.tuj8UpKl-2V6hiDUU4Js3eBHwQBqNi4ZZUwK4ICKzvI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Тест\",\r\n    \"description\": \"not empty\",\r\n    \"duration\": \"60 minutes\",\r\n    \"id_skill\": 1\r\n}\r\n//{\r\n//    \"data\": 3,\r\n//    \"message\": \"ID of created/updated record in Data\",\r\n//    \"errors\": \"\"\r\n//}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/tests",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"tests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY Start test",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id_test\":1,\"id_user\":1}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/tests/start",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"tests",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "id",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "real token",
+						"description": "Стоит указывать реальный токен, но для теста с отключенной проверкой можно любую не пустую строку",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "auth",
+						"description": "auth, если не хотим создавать везде такого пользователя (во всех 3 бд) (МП не должно указывать этот хедер)",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": { // передавать всегда\r\n        \"id\": \"1\", // no reason to provide\r\n        \"name\": \"SlavaUPD4\", // can be null\r\n        \"email\": \"slavaUPD4@mail.ru\",\r\n        \"password\": \"s4\"\r\n    },\r\n    \"filter\": { // передавать только если хочешь обновить\r\n        \"id\": [6], // поиск по параметру, массивы строк, все необязательны\r\n        \"name\": [\"SlavaUPD3\"], \r\n        \"email\": [\"slavaUPD3@mail.ru\"],\r\n        // \"interests\": [\"go\"], // пока не используй\r\n        \"limit\": 1 // передавать бессмысленно количество строк, сколько хотим обновить, \r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/users",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY users",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/users?id=9&name=SlavaUPD&email=slavaUPD@mail.ru&limit=3",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "9"
+						},
+						{
+							"key": "name",
+							"value": "SlavaUPD"
+						},
+						{
+							"key": "email",
+							"value": "slavaUPD@mail.ru"
+						},
+						{
+							"key": "limit",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READY skill",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Git test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/skills",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"skills"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

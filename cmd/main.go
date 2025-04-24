@@ -104,7 +104,7 @@ func createHandlersAndUCWithClient(pg *repository.Postgres) ([]interface{}, usec
 
 func registerHandlers(router *gin.Engine, handlers []interface{}) *gin.Engine {
 	// Routing
-	router.Use(handler.TokenAuthMiddleware())
+	//router.Use(handler.TokenAuthMiddleware()) // todo uncomment
 	router.NoRoute(handler.NotFound)
 	router.GET("/_hc", handler.HealthCheck)
 

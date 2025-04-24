@@ -24,14 +24,14 @@ func NewRepo(pg *repository.Postgres) *Repo {
 	}
 }
 
-func (r *Repo) Upsert(ctx context.Context, input entity.User) (*entity.User, error) {
-	log.Println("user upsert started")
-	defer log.Println("user upsert done")
-	var id int64
+func (r *Repo) Insert(ctx context.Context, input entity.User) (*entity.User, error) {
+	log.Println("user insert started")
+	defer log.Println("user insert done")
+	var id *int64
 
 	const q = `INSERT INTO public."user" ("name", "email", "interests")
 VALUES (@name, @email, @interests)
-ON CONFLICT ON CONSTRAINT answer_ukey
+ON CONFLICT ON CONSTRAINT users_name_email_pk
 	DO UPDATE SET name      = EXCLUDED.name,
 				  email		= EXCLUDED.email,
 				  interests = EXCLUDED.interests
@@ -49,7 +49,54 @@ RETURNING id;`
 		return nil, fmt.Errorf("unable to insert or update row: %v", err)
 	}
 
-	return &entity.User{ID: &id}, nil
+	return &entity.User{ID: id}, nil
+}
+
+func (r *Repo) Update(ctx context.Context, input entity.UserAuthInput) (*entity.User, error) {
+	log.Println("user update started")
+	defer log.Println("user update done")
+	var (
+		id *int64
+	)
+
+	values := map[string]any{
+		"email": input.User.Email,
+		//"interests": input.User,
+	}
+	if input.User.Name != nil {
+		values["name"] = *input.User.Name
+	}
+	q := r.builder.Update(entity.TableUser).SetMap(values)
+
+	// Where
+	if len(input.Filter.ID) > 0 {
+		q = q.Where(squirrel.Eq{"id": input.Filter.ID})
+	}
+	if len(input.Filter.Name) > 0 {
+		q = q.Where(squirrel.Eq{"name": input.Filter.Name})
+	}
+	if len(input.Filter.Email) > 0 {
+		q = q.Where(squirrel.Eq{"email": input.Filter.Email})
+	}
+	//if len(input.Filter.Interests) > 0 {
+	//	q = q.Where(squirrel.Eq{"interests": input.Filter.Interests})
+	//}
+
+	q = q.Suffix("RETURNING id")
+
+	sql, args, err := q.ToSql()
+	if err != nil {
+		log.Printf("unable to convert query to sql: %v\n", err)
+		return nil, fmt.Errorf("unable to convert query to sql: %v", err)
+	}
+
+	err = r.DB.QueryRow(ctx, sql, args...).Scan(&id)
+	if err != nil {
+		log.Printf("unable to update row: %v\n", err)
+		return nil, fmt.Errorf("unable to update row: %v", err)
+	}
+
+	return &entity.User{ID: id}, nil
 }
 
 func (r *Repo) Read(ctx context.Context, filter entity.UserFilter) ([]entity.User, error) {

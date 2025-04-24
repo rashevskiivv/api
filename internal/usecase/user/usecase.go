@@ -76,20 +76,47 @@ func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (
 		output = entity.User{ID: &id}
 	}
 
-	upsertInput := entity.User{
-		Name:  input.User.Name,
-		Email: input.User.Email,
+	var localOutput *entity.User
+	if isFilterEmpty(input.Filter) {
+		upsertInput := entity.User{
+			Name:  input.User.Name,
+			Email: input.User.Email,
+		}
+		localOutput, err = uc.repo.Insert(ctx, upsertInput)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		localOutput, err = uc.repo.Update(ctx, input)
+		if err != nil {
+			return nil, err
+		}
 	}
-	upsertOutput, err := uc.repo.Upsert(ctx, upsertInput)
-	if err != nil {
-		return nil, err
+	if localOutput.ID != nil && output.ID != nil {
+		if *localOutput.ID != *output.ID {
+			log.Println(fmt.Errorf("ids are not the same: id from auth %v, id from api %v", *output.ID, *localOutput.ID))
+			return nil, fmt.Errorf("ids are not the same at auth and api")
+		}
 	}
-	if *upsertOutput.ID != *output.ID {
-		log.Println(fmt.Errorf("ids are not the same: id from auth %v, id from api %v", *output.ID, *upsertOutput.ID))
-		return nil, fmt.Errorf("ids are not the same at auth and api")
-	}
+	output.ID = localOutput.ID
 
 	return &output, nil
+}
+
+func isFilterEmpty(f entity.UserFilter) bool {
+	if len(f.ID) > 0 {
+		return false
+	}
+	if len(f.Name) > 0 {
+		return false
+	}
+	if len(f.Email) > 0 {
+		return false
+	}
+	if len(f.Interests) > 0 {
+		return false
+	}
+	return true
 }
 
 func buildReq(input entity.UserAuthInput) (*client.Request, error) {
