@@ -91,10 +91,13 @@ func (uc *UseCase) UpsertVacancy(ctx context.Context, input entity.VacancyInput)
 	if err != nil {
 		return nil, err
 	}
-	if *upsertOutput.ID != *output.ID {
-		log.Println(fmt.Errorf("ids are not the same: id from auth %v, id from api %v", *output.ID, *upsertOutput.ID))
-		return nil, fmt.Errorf("ids are not the same at auth and api")
+	if upsertOutput.ID != nil && output.ID != nil {
+		if *upsertOutput.ID != *output.ID {
+			log.Println(fmt.Errorf("ids are not the same: id from auth %v, id from api %v", *output.ID, *upsertOutput.ID))
+			return nil, fmt.Errorf("ids are not the same at auth and api")
+		}
 	}
+	output.ID = upsertOutput.ID
 
 	return &output, nil
 }
