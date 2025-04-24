@@ -83,7 +83,7 @@ func (f *VacancyFilter) Validate() error {
 }
 
 type VacancyInput struct {
-	Vacancy Vacancy
-	Filter  VacancyFilter
+	Vacancy Vacancy       `json:"vacancy"`
+	Filter  VacancyFilter `json:"filter"`
 	RequestUtils
 }
