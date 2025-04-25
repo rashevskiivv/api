@@ -132,21 +132,18 @@ func (uc *UseCase) StartTest(ctx context.Context, input entity.StartTestInput) (
 		questionsToReturn = append(questionsToReturn, questionToReturn)
 	}
 
+	testToReturn := entity.StartTestOutput{
+		NumberOfQuestions: int8(len(questionsToReturn)),
+		Questions:         questionsToReturn,
+	}
+
 	upsertInput := entity.TestUser{
 		U:                 entity.User{ID: &input.IDUser},
 		T:                 entity.Test{ID: &input.IDTest},
 		NumberOfQuestions: uint(len(questionsToReturn)),
 	}
 	err = uc.repoLink.UpsertTestUser(ctx, upsertInput)
-	if err != nil {
-		return nil, err
-	}
-
-	testToReturn := entity.StartTestOutput{
-		NumberOfQuestions: int8(len(questionsToReturn)),
-		Questions:         questionsToReturn,
-	}
-	return &testToReturn, nil
+	return &testToReturn, err
 }
 
 func (uc *UseCase) EndTest(ctx context.Context, filter entity.EndTestInput) error {

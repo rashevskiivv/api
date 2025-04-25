@@ -197,6 +197,9 @@ func (h *Handler) StartHandle(ctx *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		response.Errors = err.Error()
+		if output != nil {
+			response.Data = output
+		}
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
 	}
