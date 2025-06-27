@@ -85,3 +85,19 @@ type UserAuthInput struct {
 	Filter UserFilter `json:"filter"`
 	RequestUtils
 }
+
+func (u *UserAuthInput) Validate() error {
+	// Validate RequestUtils (ID and Token)
+	err := u.RequestUtils.Validate()
+	if err != nil {
+		return err
+	}
+
+	// Validate User data
+	if u.User.Email == "" {
+		return fmt.Errorf("user email cannot be empty")
+	}
+
+	// Validate Filter if provided
+	return u.Filter.Validate()
+}

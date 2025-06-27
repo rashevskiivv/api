@@ -78,6 +78,10 @@ func (uc *UseCase) UpsertUser(ctx context.Context, input entity.UserAuthInput) (
 
 	var localOutput *entity.User
 	if isFilterEmpty(input.Filter) {
+		if input.User.Name == nil {
+			empty := ""
+			input.User.Name = &empty
+		}
 		upsertInput := entity.User{
 			Name:  input.User.Name,
 			Email: input.User.Email,

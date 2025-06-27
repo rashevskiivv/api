@@ -137,11 +137,11 @@ func (r *Repo) Read(ctx context.Context, filter entity.UserFilter) ([]entity.Use
 	}
 
 	rows, err := r.DB.Query(ctx, sql, args...)
-	defer rows.Close()
 	if err != nil {
 		log.Printf("unable to query users: %v\n", err)
 		return nil, fmt.Errorf("unable to query users: %v", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		answer := entity.User{}
